@@ -1,0 +1,971 @@
+:root {
+    --bg: #eef3f8;
+    --panel: #ffffff;
+    --panel-soft: #f7f9fc;
+    --border: #d5dde8;
+    --text: #1f2d3d;
+    --text-soft: #5f6f82;
+    --primary: #0a6ed1;
+    --primary-dark: #0854a0;
+    --success: #256f3a;
+    --success-bg: #eaf7ed;
+    --warning: #8d6b00;
+    --warning-bg: #fff8d6;
+    --error: #aa0808;
+    --error-bg: #ffecef;
+    --info: #0a6ed1;
+    --info-bg: #eaf3fc;
+    --shadow: rgba(31, 45, 61, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.training-page {
+    min-height: 100vh;
+}
+
+.training-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.training-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: linear-gradient(180deg, #fdfefe 0%, #edf3fa 100%);
+    border-bottom: 1px solid var(--border);
+}
+
+.training-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.training-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 30px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #009de0 0%, #0a6ed1 100%);
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.training-brand h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.training-brand p,
+.training-session-meta span {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+.training-session-meta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.training-command-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    background: #f4f8fc;
+    border-bottom: 1px solid var(--border);
+}
+
+.command-entry {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.command-entry label {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.command-entry input {
+    width: 420px;
+    max-width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #aebfd3;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 14px;
+    outline: none;
+}
+
+.command-entry input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(10, 110, 209, 0.12);
+}
+
+.primary-action,
+.module-button {
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.primary-action {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.module-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.module-button.active,
+.practice-button {
+    background: #dcecff;
+    border-color: #9fc3eb;
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.training-main {
+    flex: 1;
+    display: flex;
+    gap: 16px;
+    padding: 16px 18px;
+    overflow: hidden;
+}
+
+.training-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.workspace-panel,
+.sidebar-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 4px 14px var(--shadow);
+}
+
+.workspace-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.panel-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel-soft);
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.panel-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+.workspace-content,
+.conversation-output {
+    padding: 16px;
+    overflow: auto;
+    min-height: 220px;
+}
+
+.workspace-content {
+    background: #ffffff;
+}
+
+.conversation-output {
+    background: #fbfcfe;
+    font-family: "Courier New", Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.training-sidebar {
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: auto;
+}
+
+.sidebar-panel {
+    padding: 14px;
+}
+
+.sidebar-panel h3 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: var(--primary-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sidebar-panel p,
+.sidebar-panel li,
+.sidebar-panel div {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.sidebar-list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.scenario-card,
+.reference-item,
+.progress-item {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.scenario-card.active,
+.progress-item.active {
+    background: #edf5ff;
+    border-left: 4px solid var(--primary);
+}
+
+.progress-item.completed {
+    background: var(--success-bg);
+    border-left: 4px solid var(--success);
+}
+
+.reference-list,
+.progress-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.console-line {
+    margin: 0 0 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.console-line.system {
+    color: var(--text);
+}
+
+.console-line.info {
+    color: var(--info);
+}
+
+.console-line.success {
+    color: var(--success);
+}
+
+.console-line.warning {
+    color: var(--warning);
+}
+
+.console-line.error {
+    color: var(--error);
+}
+
+.console-line.prompt {
+    color: #5a2c8a;
+    font-weight: 600;
+}
+
+.training-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    background: #edf3fa;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+}
+
+.status-left,
+.status-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-info {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.status-success {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-warning {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.status-error {
+    background: var(--error-bg);
+    color: var(--error);
+}
+
+.training-grid {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.training-grid th,
+.training-grid td {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.training-grid th {
+    background: #edf3fa;
+}
+
+.training-callout {
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.training-callout.info {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.training-callout.warning {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.training-callout.success {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.training-callout.error {
+    background: var(--error-bg);
+    color: var(--error);
+}
+
+kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #ffffff;
+    font-family: "Courier New", Consolas, monospace;
+    font-size: 12px;
+}
+
+@media (max-width: 1100px) {
+    .training-main,
+    .training-command-bar,
+    .training-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .training-sidebar {
+        width: 100%;
+    }
+
+    .command-entry input {
+        width: 100%;
+    }
+}
+
+/* Made with Bob */
+
+/* Professional Mode - SAP Selection Screen Styles */
+.sap-selection-screen {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.selection-header {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+}
+
+.selection-header h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    color: var(--text);
+}
+
+.selection-header p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+.selection-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f9fbfd;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.section-title {
+    margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.selection-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.sap-field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sap-field-row label {
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.sap-input {
+    height: 32px;
+    padding: 6px 10px;
+    border: 1px solid #b8c7d9;
+    border-radius: 4px;
+    background: #ffffff;
+    font-size: 13px;
+    outline: none;
+}
+
+.sap-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(10, 110, 209, 0.12);
+}
+
+.sap-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+}
+
+.sap-checkbox-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.sap-checkbox-row label {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.selection-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.sap-button {
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sap-button:hover {
+    background: #f4f7fb;
+    border-color: var(--primary);
+}
+
+.sap-button-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.sap-button-primary:hover {
+    background: var(--primary-dark);
+}
+
+/* Result Grid Styles */
+.result-grid-container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.result-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+}
+
+.result-header h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+}
+
+.result-header p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+.sap-result-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.sap-result-grid th,
+.sap-result-grid td {
+    padding: 10px 12px;
+    border: 1px solid #d5dde8;
+    text-align: left;
+}
+
+.sap-result-grid th {
+    background: #edf3fa;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.sap-result-grid tbody tr:hover {
+    background: #f7faff;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-badge.status-success {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-badge.status-warning {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.status-badge.status-error {
+    background: var(--error-bg);
+    color: var(--error);
+}
+
+.mode-toggle {
+    background: #dcecff;
+    border-color: #9fc3eb;
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FI/CO MODULE STYLES
+   Senior Manager / Principal Consultant preparation
+   IBM Bob: SAP SkillBridge Sandbox
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Module badges on command bar buttons ─────────────────────────────────── */
+.module-button.fi-btn {
+    border-color: #0a6ed1;
+    color: #0a6ed1;
+    font-weight: 600;
+}
+.module-button.co-btn {
+    border-color: #256f3a;
+    color: #256f3a;
+    font-weight: 600;
+}
+
+/* ── Scenario Cards ───────────────────────────────────────────────────────── */
+.scenario-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    background: var(--panel-soft);
+    transition: border-color 0.15s;
+}
+.scenario-card.active {
+    border-color: var(--primary);
+    background: var(--info-bg);
+}
+.scenario-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.scenario-module-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--primary);
+    color: #fff;
+}
+.scenario-module-badge.fiap   { background: #0a6ed1; }
+.scenario-module-badge.coom   { background: #256f3a; }
+.scenario-module-badge.copa   { background: #7c5cd8; }
+.scenario-module-badge.sdfi   { background: #8d6b00; color: #fff; }
+.scenario-level {
+    font-size: 10px;
+    color: var(--text-soft);
+}
+.scenario-summary {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin: 4px 0 8px;
+}
+.scenario-select-btn {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.1s, color 0.1s;
+}
+.scenario-select-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+.scenario-select-btn.active {
+    background: var(--primary);
+    color: #fff;
+    cursor: default;
+}
+
+/* ── FI/CO KPI Cards (used in F110 and KE30 result grids) ─────────────────── */
+.fi-kpi-card {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel-soft);
+    min-width: 160px;
+    margin: 4px 8px 4px 0;
+    vertical-align: top;
+}
+.fi-kpi-card.ok {
+    border-color: var(--success);
+    background: var(--success-bg);
+}
+.fi-kpi-card.warn {
+    border-color: #c76a00;
+    background: #fff5e6;
+}
+.fi-kpi-label {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.fi-kpi-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 2px 0;
+}
+.fi-kpi-count {
+    font-size: 11px;
+    color: var(--text-soft);
+}
+
+/* ── Variance Indicators ──────────────────────────────────────────────────── */
+.variance-over {
+    color: var(--error) !important;
+    font-weight: 600;
+}
+.variance-under {
+    color: var(--success) !important;
+    font-weight: 600;
+}
+
+/* ── Status Indicators for Payment Blocks ────────────────────────────────── */
+.status-blocked {
+    color: var(--error);
+    font-weight: 600;
+}
+.status-ok {
+    color: var(--success);
+    font-weight: 600;
+}
+.fi-status-ok {
+    color: var(--success);
+}
+
+/* ── SAP Muted cells ─────────────────────────────────────────────────────── */
+.sap-muted {
+    color: var(--text-soft);
+    font-style: italic;
+}
+
+/* ── Highlight row in result grids ──────────────────────────────────────── */
+.highlight-row {
+    background: var(--warning-bg) !important;
+}
+
+/* ── FI/CO result meta secondary row (KPI cards row) ────────────────────── */
+.sap-result-meta.secondary {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ── Total row in result grids ──────────────────────────────────────────── */
+.sap-grid-table tfoot .total-row {
+    background: var(--panel-soft);
+    font-weight: 700;
+    border-top: 2px solid var(--border);
+}
+
+/* ── SAP message bars ────────────────────────────────────────────────────── */
+.sap-message-bar {
+    margin-top: 10px;
+    padding: 7px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    border-left: 4px solid var(--border);
+}
+.sap-message-bar.success {
+    background: var(--success-bg);
+    border-left-color: var(--success);
+    color: var(--success);
+}
+.sap-message-bar.warning {
+    background: var(--warning-bg);
+    border-left-color: #c76a00;
+    color: var(--warning);
+}
+.sap-message-bar.info {
+    background: var(--info-bg);
+    border-left-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ── SAP checkbox row for FBL1N ─────────────────────────────────────────── */
+.sap-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 13px;
+}
+.sap-checkbox-row input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+.sap-checkbox-row label {
+    margin-right: 8px;
+    cursor: pointer;
+    color: var(--text);
+}
+
+/* ── SAP short input for period range fields ─────────────────────────────── */
+.sap-input.short {
+    width: 70px;
+}
+
+/* ── SAP KV metadata spans ───────────────────────────────────────────────── */
+.sap-kv {
+    display: inline-block;
+    margin-right: 16px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+.sap-kv strong {
+    color: var(--text);
+}
+
+/* ── Result header layout ────────────────────────────────────────────────── */
+.sap-result-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.sap-result-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+}
+
+/* Made with Bob – FI/CO styles for Senior Manager role preparation */
+
+/* ── Onboarding / How-to-use box ─────────────────────────────────────────── */
+.onboarding-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 4px;
+}
+.onboarding-how-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.onboarding-how-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.onboarding-how-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+.onboarding-how-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.onboarding-how-step strong {
+    font-size: 13px;
+    display: block;
+    margin-bottom: 2px;
+}
+.onboarding-how-step span {
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+/* ── Progress steps inside workspace ────────────────────────────────────── */
+.onboarding-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.onboarding-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    border: 1px solid var(--border);
+}
+.onboarding-step.done {
+    background: var(--success-bg);
+    border-color: var(--success);
+    color: var(--success);
+}
+.onboarding-step.current {
+    background: var(--info-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 700;
+}
+.onboarding-step.todo {
+    background: var(--panel-soft);
+    color: var(--text-soft);
+}
+.step-icon {
+    font-size: 15px;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Made with Bob – onboarding styles */

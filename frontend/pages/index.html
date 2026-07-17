@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP S/4HANA – IBM Bob SkillBridge</title>
+    <link rel="stylesheet" href="../css/styles.css?v=5.0">
+    <link rel="stylesheet" href="../css/fiori.css?v=5.0">
+</head>
+<body class="fiori-body">
+
+    <!-- ── FIORI SHELL BAR (top) ──────────────────────────────────────── -->
+    <header class="fiori-shell-bar">
+        <div class="shell-left">
+            <button class="shell-menu-btn" id="menuToggleBtn" title="Toggle navigation menu">&#9776;</button>
+            <span class="shell-logo">SAP</span>
+            <span class="shell-app-title">S/4HANA Finance &amp; Controlling</span>
+        </div>
+        <div class="shell-center">
+            <!-- SAP Fiori search / transaction field -->
+            <div class="shell-search-wrap">
+                <input
+                    id="commandField"
+                    class="shell-search-input"
+                    type="text"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="Search apps or enter transaction code…"
+                    aria-label="SAP transaction command field"
+                >
+                <button id="enterCommandButton" class="shell-search-btn" title="Run (Enter)">&#9654;</button>
+            </div>
+        </div>
+        <div class="shell-right">
+            <span class="shell-meta">Client 1000</span>
+            <span class="shell-meta">S4H</span>
+            <div class="shell-user-avatar" title="CONSULTANT01">C</div>
+        </div>
+    </header>
+
+    <!-- ── MAIN LAYOUT ────────────────────────────────────────────────── -->
+    <div class="fiori-layout">
+
+        <!-- ── LEFT NAV (Fiori side navigation) ──────────────────────── -->
+        <nav class="fiori-nav" id="fioriNav">
+            <div class="nav-section-label">Financial Accounting</div>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="fi-gl">
+                    <span class="nav-icon">&#9650;</span> General Ledger
+                </li>
+                <li class="nav-item" data-tcode="FS10N">G/L Account Balances</li>
+                <li class="nav-item" data-tcode="FB03">Display FI Document</li>
+                <li class="nav-item" data-tcode="FAGLL03">G/L Line Items</li>
+            </ul>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="fi-ap">
+                    <span class="nav-icon">&#9650;</span> Accounts Payable
+                </li>
+                <li class="nav-item" data-tcode="FBL1N">Vendor Line Items</li>
+                <li class="nav-item" data-tcode="F110">Automatic Payment Run</li>
+                <li class="nav-item" data-tcode="MIRO">Enter Vendor Invoice</li>
+            </ul>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="fi-ar">
+                    <span class="nav-icon">&#9650;</span> Accounts Receivable
+                </li>
+                <li class="nav-item" data-tcode="FBL5N">Customer Line Items</li>
+                <li class="nav-item" data-tcode="F-28">Post Incoming Payment</li>
+            </ul>
+
+            <div class="nav-section-label" style="margin-top:12px;">Controlling</div>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="co-cca">
+                    <span class="nav-icon">&#9650;</span> Cost Center Accounting
+                </li>
+                <li class="nav-item" data-tcode="KSB1">Cost Center Actuals</li>
+                <li class="nav-item" data-tcode="KSB5">Cost Center Documents</li>
+                <li class="nav-item" data-tcode="S_ALR_87013611">Cost Centers: Plan/Actual</li>
+            </ul>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="co-pa">
+                    <span class="nav-icon">&#9650;</span> Profitability Analysis
+                </li>
+                <li class="nav-item" data-tcode="KE30">Execute CO-PA Report</li>
+                <li class="nav-item" data-tcode="KE24">Display PA Line Items</li>
+            </ul>
+
+            <div class="nav-section-label" style="margin-top:12px;">Sales &amp; Distribution</div>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="sd">
+                    <span class="nav-icon">&#9650;</span> Sales Orders
+                </li>
+                <li class="nav-item" data-tcode="VA03">Display Sales Order</li>
+                <li class="nav-item" data-tcode="VA05">List Sales Orders</li>
+                <li class="nav-item" data-tcode="VKM3">Blocked SD Documents</li>
+            </ul>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="sd-bill">
+                    <span class="nav-icon">&#9650;</span> Billing
+                </li>
+                <li class="nav-item" data-tcode="VF01">Create Billing Document</li>
+                <li class="nav-item" data-tcode="VF04">Billing Due List</li>
+            </ul>
+
+            <!-- Separator -->
+            <div class="nav-separator"></div>
+            <div class="nav-section-label">Training</div>
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="training">
+                    <span class="nav-icon">&#9650;</span> Practice Scenarios
+                </li>
+                <li class="nav-item" style="font-weight:700;" onclick="window.location.href='scenarios.html'">&#127919; Open Interactive Scenarios</li>
+                <li class="nav-item scenario-nav-item" data-scenario="payment_run_exception">&#127381; Payment Run Blocked</li>
+                <li class="nav-item scenario-nav-item" data-scenario="cost_center_overrun">&#127381; IT Cost Center Overrun</li>
+                <li class="nav-item scenario-nav-item" data-scenario="copa_margin_analysis">&#127381; CO-PA Board Report</li>
+                <li class="nav-item scenario-nav-item" data-scenario="billing_credit_block">&#127381; Billing Credit Block</li>
+            </ul>
+        </nav>
+
+        <!-- ── CONTENT AREA ──────────────────────────────────────────── -->
+        <div class="fiori-content">
+
+            <!-- Content header (breadcrumb + title) -->
+            <div class="content-header">
+                <div class="content-breadcrumb" id="contentBreadcrumb">Home &rsaquo; Financial Accounting</div>
+                <div class="content-title-row">
+                    <h1 class="content-title" id="screenTitle">SAP S/4HANA Sandbox</h1>
+                    <p  class="content-subtitle" id="screenSubtitle">Select a transaction or scenario from the menu</p>
+                </div>
+            </div>
+
+            <!-- Transaction workspace -->
+            <div class="content-body">
+                <div id="transactionWorkspace" class="workspace-content"></div>
+            </div>
+
+            <!-- Bob coaching panel (collapsible footer-style) -->
+            <div class="coach-panel" id="coachPanel">
+                <div class="coach-panel-header">
+                    <span class="coach-label">&#129302; Bob Coaching Console</span>
+                    <button class="coach-toggle-btn" id="coachToggleBtn" title="Collapse">&#8964;</button>
+                </div>
+                <div id="consoleOutput" class="coach-output"></div>
+            </div>
+        </div>
+
+        <!-- ── RIGHT SIDEBAR (Progress + Hints) ─────────────────────── -->
+        <aside class="fiori-sidebar" id="fioriSidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Active Scenario</div>
+                <div id="scenarioPanel"></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Progress</div>
+                <div id="progressPanel"></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Hint</div>
+                <p id="currentHint" class="sidebar-hint">Select a scenario from the menu to begin.</p>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Learning Objectives</div>
+                <div id="learningObjectivesPanel"></div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Quick Reference</div>
+                <div id="quickReferencePanel"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ── FIORI STATUS BAR (bottom) ─────────────────────────────────── -->
+    <footer class="fiori-status-bar">
+        <div class="status-left">
+            <span id="messageTypeIndicator" class="status-indicator status-info">i</span>
+            <span id="messageBar">Ready — select a transaction from the menu or type a code above.</span>
+        </div>
+        <div class="status-right">
+            <span id="modeToggleButton" class="status-mode-btn">Switch to Professional Mode</span>
+            <span class="status-tag">English</span>
+            <span class="status-tag">FI/CO</span>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/app/main.js?v=5.0"></script>
+</body>
+</html>

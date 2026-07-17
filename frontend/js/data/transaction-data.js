@@ -1,0 +1,483 @@
+const transactionResponses = {
+
+    // ───── FI/CO TRANSACTIONS (COACHING MODE) ─────────────────────────────────
+
+    // ─── SCENARIO: Payment Run Exception ──────────────────────────────────────
+    F110: {
+        completedStep: "review_payment_run",
+        hint: "You confirmed the payment run has an exception. Now drill into the vendor open items using FBL1N to understand why the invoice is blocked.",
+        statusMessage: "Payment run proposal created with 1 exception. Review vendor line items before posting.",
+        statusType: "warning",
+        screen: {
+            title: "F110 Payment Run Proposal – Exception Detected",
+            subtitle: "Automatic Payment Transactions",
+            html: `
+                <div class="training-callout warning">
+                    <strong>Payment Run Status:</strong> Proposal Created with 1 exception. Payment posting has NOT been executed.
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Vendor</th>
+                            <th>Document</th>
+                            <th>Invoice Ref.</th>
+                            <th>Net Due Date</th>
+                            <th>Amount (USD)</th>
+                            <th>Payment Block</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>V100001</td>
+                            <td>1900012346</td>
+                            <td>SUPP-INV-8876</td>
+                            <td>2026-07-28</td>
+                            <td class="number">145,000.00</td>
+                            <td class="status-ok">[OK]</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>V100002</td>
+                            <td>1900012351</td>
+                            <td>GLOB-INV-44518</td>
+                            <td>2026-08-19</td>
+                            <td class="number">470,000.00</td>
+                            <td class="status-blocked">[!] Payment Block R</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> Document 1900012351 has a payment block R – manual release required. Before releasing this USD 470K payment, you must investigate the vendor open items and document the business justification. Which transaction would you use to review vendor V100002's open items?
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered F110 to review the automated payment run proposal.", type: "prompt" },
+            { text: "Bob: Good choice. F110 is the standard transaction for managing large-scale vendor payments.", type: "success" },
+            { text: "Bob: The proposal has been created, but payment posting is blocked. One vendor invoice (V100002, USD 470,000) is flagged with payment block R.", type: "warning" },
+            { text: "Bob: Before you release this block, you must investigate why it was placed and whether release is justified. Which transaction displays vendor line items?", type: "info" }
+        ]
+    },
+
+    FBL1N: {
+        completedStep: "investigate_vendor_items",
+        hint: "You confirmed the invoice 1900012351 is blocked with payment block R. Now display the FI document using FB03 to validate the invoice details.",
+        statusMessage: "Vendor open items displayed. Payment block R detected on document 1900012351.",
+        statusType: "warning",
+        screen: {
+            title: "Vendor Open Items – V100002 (Global Component Supply)",
+            subtitle: "FBL1N – Vendor Line Item Display",
+            html: `
+                <div class="training-callout success">
+                    <strong>Vendor:</strong> V100002 – Global Component Supply
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Document</th>
+                            <th>Doc Date</th>
+                            <th>Invoice Ref.</th>
+                            <th>Net Due Date</th>
+                            <th>Amount (USD)</th>
+                            <th>Payment Block</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1900012350</td>
+                            <td>2026-06-10</td>
+                            <td>GLOB-INV-44512</td>
+                            <td>2026-08-09</td>
+                            <td class="number">420,000.00</td>
+                            <td class="status-ok">[OK]</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>1900012351</td>
+                            <td>2026-06-20</td>
+                            <td>GLOB-INV-44518</td>
+                            <td>2026-08-19</td>
+                            <td class="number">470,000.00</td>
+                            <td class="status-blocked">[!] Block R</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> Document 1900012351 is marked with payment block R. This means a manual review is required before payment can be released. To validate the invoice details and confirm whether the block should be lifted, which transaction would you use to display the accounting document?
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered FBL1N to review vendor V100002 open items.", type: "prompt" },
+            { text: "Bob: Excellent. FBL1N is the correct transaction for AP reconciliation and vendor line item investigation.", type: "success" },
+            { text: "Bob: You found that invoice 1900012351 (GLOB-INV-44518) has payment block R. This is USD 470,000.", type: "warning" },
+            { text: "Bob: To validate the invoice details before making your release recommendation to the CFO, which transaction displays the underlying FI document?", type: "info" }
+        ]
+    },
+
+    FB03: {
+        completedStep: "display_fi_document",
+        hint: "Scenario completed. You investigated the F110 exception, reviewed vendor open items in FBL1N, and validated the FI document in FB03. Now prepare your recommendation: release or hold?",
+        statusMessage: "FI document 1900012351 displayed. Ready for release decision documentation.",
+        statusType: "success",
+        screen: {
+            title: "FI Document 1900012351 – Vendor Invoice",
+            subtitle: "FB03 – Display Document",
+            html: `
+                <div class="training-callout success">
+                    <strong>Document Confirmed:</strong> 1900012351 | Company Code: 1000 | Fiscal Year: 2026 | Period: 006
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Line Item</th>
+                            <th>Account</th>
+                            <th>Description</th>
+                            <th>Debit (USD)</th>
+                            <th>Credit (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>300000</td>
+                            <td>AP Global Component Supply</td>
+                            <td class="number">—</td>
+                            <td class="number">470,000.00</td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>130000</td>
+                            <td>Raw Materials Inventory</td>
+                            <td class="number">470,000.00</td>
+                            <td class="number">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout success">
+                    <strong>Bob Coaching:</strong> Well done. You traced the payment exception from F110 → FBL1N → FB03 and confirmed the invoice is legitimate. The payment block R is a governance control requiring documented approval before release. You now have everything you need to prepare the CFO recommendation: "Release payment block R on document 1900012351 after confirming goods receipt and management approval." This is how Senior FI Managers operate in high-stakes SAP implementations.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered FB03 to display the FI document 1900012351.", type: "prompt" },
+            { text: "Bob: Perfect. FB03 shows you the complete accounting document with all line items and account assignments.", type: "success" },
+            { text: "Bob: The document is a vendor invoice posting (doc type KR) for USD 470,000 – inventory purchase from Global Component Supply.", type: "info" },
+            { text: "Bob: Scenario complete. You followed the correct investigation path: F110 → FBL1N → FB03. You can now recommend whether to release or hold this payment block, with documented justification.", type: "success" }
+        ]
+    },
+
+    // ─── SCENARIO: Cost Center Overrun ────────────────────────────────────────
+    KSB1: {
+        completedStep: "review_cost_center_actuals",
+        hint: "You identified the G/L account 820000 (IT Infrastructure) variance. Now use FB03 to display the underlying FI document that drove the over-budget posting.",
+        statusMessage: "Cost center variance displayed. IT Infrastructure account 820000 shows +13% overrun.",
+        statusType: "warning",
+        screen: {
+            title: "Cost Center 10103000 – Actual vs Plan Variance",
+            subtitle: "KSB1 – Cost Centers: Actual Line Items",
+            html: `
+                <div class="training-callout warning">
+                    <strong>Cost Center:</strong> 10103000 – IT Operations | <strong>Manager:</strong> Mark Torres
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>G/L Account</th>
+                            <th>Description</th>
+                            <th>Plan (USD)</th>
+                            <th>Actual (USD)</th>
+                            <th>Variance</th>
+                            <th>Var %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>006</td>
+                            <td>820000</td>
+                            <td>IT Infrastructure and Software</td>
+                            <td class="number">190,000.00</td>
+                            <td class="number">215,000.00</td>
+                            <td class="number variance-over">+25,000.00</td>
+                            <td class="number variance-over">+13.2%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> The IT Operations cost center is USD 25,000 over-budget on account 820000 (IT Infrastructure and Software). This is a 13.2% overrun and must be explained before the Controller can close period 006. To trace the root cause, which transaction would you use to display the originating FI accounting document?
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered KSB1 to review cost center actuals vs plan.", type: "prompt" },
+            { text: "Bob: Excellent choice. KSB1 is the core CO transaction for cost center variance analysis.", type: "success" },
+            { text: "Bob: You identified the variance on G/L account 820000 (IT Infrastructure). Period 006 actual is USD 215,000 vs plan of USD 190,000 (+13.2%).", type: "warning" },
+            { text: "Bob: To understand what caused this cost spike, you need to display the underlying FI document. Which transaction shows FI accounting documents?", type: "info" }
+        ]
+    },
+
+    // ─── SCENARIO: CO-PA Margin Analysis ──────────────────────────────────────
+    KE30: {
+        completedStep: "run_copa_report",
+        hint: "You executed the CO-PA segment profitability report. The Electronics segment has the highest revenue but you should validate whether its margin is competitive. Consider using KSB1 to drill into the cost centre drivers.",
+        statusMessage: "CO-PA segment profitability report executed. Electronics segment shows highest revenue with 21.6% EBIT margin.",
+        statusType: "success",
+        screen: {
+            title: "CO-PA Segment Profitability Report – H1 2026",
+            subtitle: "KE30 – Profitability Analysis",
+            html: `
+                <div class="training-callout success">
+                    <strong>Operating Concern:</strong> 1000 | <strong>Report:</strong> COPA-01-SEGMENT | <strong>Period:</strong> 001–006 / 2026
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Profit Center</th>
+                            <th>Segment</th>
+                            <th>Revenue (USD)</th>
+                            <th>COGS (USD)</th>
+                            <th>EBIT (USD)</th>
+                            <th>Margin %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>PC-ELEC-NA</td>
+                            <td>Electronics – North America</td>
+                            <td class="number">4,850,000</td>
+                            <td class="number">2,912,000</td>
+                            <td class="number">1,048,000</td>
+                            <td class="number">21.6%</td>
+                        </tr>
+                        <tr>
+                            <td>PC-IND-NA</td>
+                            <td>Industrial – North America</td>
+                            <td class="number">2,130,000</td>
+                            <td class="number">1,450,000</td>
+                            <td class="number">360,000</td>
+                            <td class="number">16.9%</td>
+                        </tr>
+                        <tr>
+                            <td>PC-CONS-NA</td>
+                            <td>Consumer Goods – N. America</td>
+                            <td class="number">1,760,000</td>
+                            <td class="number">990,000</td>
+                            <td class="number">360,000</td>
+                            <td class="number">20.5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout success">
+                    <strong>Bob Coaching:</strong> You successfully executed the KE30 CO-PA report. The Electronics segment (PC-ELEC-NA) delivers the highest revenue (USD 4.85M) with a 21.6% EBIT margin. This is strong, but the CFO suspected margin compression. Your next step is to translate this into executive-level language for the Board: "Electronics segment is the revenue leader with healthy margin. Industrial segment margin is lower (16.9%) – recommend cost review." This is how Principal Consultants prepare CFO briefings.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered KE30 to execute the CO-PA profitability report.", type: "prompt" },
+            { text: "Bob: Excellent. KE30 is the key CO-PA transaction for segment profitability analysis and Board-level reporting.", type: "success" },
+            { text: "Bob: The report shows three segments: Electronics (21.6% margin), Industrial (16.9%), and Consumer Goods (20.5%).", type: "info" },
+            { text: "Bob: The Electronics segment is performing well. The Industrial segment has a lower margin and may require cost discipline. You now have the data to prepare your CFO executive summary.", type: "success" }
+        ]
+    },
+
+    FS10N: {
+        completedStep: "confirm_gl_balance",
+        hint: "You confirmed the G/L account 110000 (Accounts Receivable) closing balance. This cross-checks with the revenue and profitability data you analysed earlier.",
+        statusMessage: "G/L account balance displayed for period 006 / 2026.",
+        statusType: "success",
+        screen: {
+            title: "G/L Account 110000 – Accounts Receivable Balance",
+            subtitle: "FS10N – G/L Account Balance Display",
+            html: `
+                <div class="training-callout success">
+                    <strong>G/L Account:</strong> 110000 – Accounts Receivable – Trade | <strong>Company Code:</strong> 1000 | <strong>Fiscal Year:</strong> 2026
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Debit (USD)</th>
+                            <th>Credit (USD)</th>
+                            <th>Cumulative Balance (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001 (Opening)</td>
+                            <td class="number">—</td>
+                            <td class="number">—</td>
+                            <td class="number">1,850,000.00</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>006 (Jun)</td>
+                            <td class="number">229,500.00</td>
+                            <td class="number">—</td>
+                            <td class="number">2,079,500.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout success">
+                    <strong>Bob Coaching:</strong> FS10N shows the AR balance increased by USD 229,500 in period 006, reflecting the SD invoice you saw earlier. This cross-checks with the revenue postings. FS10N is a critical tool for month-end close validation and balance sheet reconciliation. You now understand how FI and CO data flows connect across modules.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered FS10N to review the G/L account balance.", type: "prompt" },
+            { text: "Bob: Good. FS10N is the standard transaction for reviewing G/L account period-by-period balances during month-end close.", type: "success" },
+            { text: "Bob: Account 110000 (Accounts Receivable) shows a closing balance of USD 2,079,500 for period 006. This aligns with the revenue and billing activity you analysed earlier.", type: "info" },
+            { text: "Bob: You now have the tools to navigate FI-GL, CO-CCA, and CO-PA transactions at a Senior Manager level.", type: "success" }
+        ]
+    },
+
+    // ───── SD/O2C TRANSACTIONS (EXISTING COACHING MODE) ──────────────────────
+
+    VF01: {
+        completedStep: "observe_billing_error",
+        hint: "Good start. Now investigate whether the billing issue is caused by credit management or logistics status.",
+        statusMessage: "Billing creation failed. Review the blocking reason before retrying.",
+        statusType: "warning",
+        screen: {
+            title: "Billing Error Investigation",
+            subtitle: "VF01",
+            html: `
+                <div class="training-callout warning">
+                    <strong>System Message:</strong> Billing document was not created.
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Sales Document</th>
+                            <th>Logistics Status</th>
+                            <th>Billing Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1000234</td>
+                            <td>Completed</td>
+                            <td>Blocked for credit review</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> You confirmed that billing failed, but the logistics process is already complete. That means you should now investigate whether a financial or credit-related control is blocking the document.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered VF01 to attempt billing creation.", type: "prompt" },
+            { text: "Bob: Good choice. Always start by reproducing the issue reported by the business user.", type: "success" },
+            { text: "Bob: The output shows that logistics is complete, so the next step is to investigate a possible credit block.", type: "info" },
+            { text: "Bob: Which transaction would you use to analyze blocked documents for credit review?", type: "warning" }
+        ]
+    },
+
+    VKM3: {
+        completedStep: "analyze_credit_block",
+        hint: "You found the credit block. Now validate the sales document context before deciding what should be checked for release.",
+        statusMessage: "Credit block analysis displayed successfully.",
+        statusType: "success",
+        screen: {
+            title: "Credit Block Analysis",
+            subtitle: "VKM3",
+            html: `
+                <div class="training-callout success">
+                    <strong>System Finding:</strong> The sales document is listed in credit management review.
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Sales Document</th>
+                            <th>Customer</th>
+                            <th>Credit Status</th>
+                            <th>Release Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1000234</td>
+                            <td>1000234</td>
+                            <td>Blocked</td>
+                            <td>Pending review</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> Excellent choice. You accessed VKM3 and confirmed that the document is blocked for credit review. Before releasing it, you should validate the customer, document value, risk exposure, and whether the release follows governance rules.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered VKM3 to analyze the credit block.", type: "prompt" },
+            { text: "Bob: Excellent choice. VKM3 is the correct transaction to review blocked documents for credit management.", type: "success" },
+            { text: "Bob: Before releasing the document, validate the customer account, credit exposure, document value, and approval rules.", type: "info" },
+            { text: "Bob: To explain the business context clearly, which transaction would you use to review the sales document itself?", type: "warning" }
+        ]
+    },
+
+    VA03: {
+        completedStep: "validate_document_context",
+        hint: "Scenario completed. You followed the correct investigation path from billing failure to credit analysis and document validation.",
+        statusMessage: "Sales document context displayed successfully.",
+        statusType: "success",
+        screen: {
+            title: "Sales Document Context Review",
+            subtitle: "VA03",
+            html: `
+                <div class="training-callout success">
+                    <strong>Business Context Confirmed:</strong> The sales document is complete from a logistics perspective but blocked for billing due to credit review.
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Sales Document</th>
+                            <th>Customer</th>
+                            <th>Sales Area</th>
+                            <th>Overall Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1000234</td>
+                            <td>1000234</td>
+                            <td>1000 / 10 / 00</td>
+                            <td>Billing blocked by credit management</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout success">
+                    <strong>Bob Coaching:</strong> Well done. You confirmed that the issue is not a logistics failure. The correct explanation is that billing is blocked by credit management, so the analyst must validate governance checks before any release decision.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered VA03 to review the sales document context.", type: "prompt" },
+            { text: "Bob: Great. VA03 helps you explain the issue in business language, not only technical language.", type: "success" },
+            { text: "Bob: You now know the root cause chain: billing failed -> credit block identified -> document context validated.", type: "info" },
+            { text: "Bob: Scenario complete. You investigated the issue in the correct sequence.", type: "success" }
+        ]
+    }
+};
+
+export function getTransactionResponse(code) {
+    return transactionResponses[code] || null;
+}
+
+// Made with Bob – FI/CO transaction responses added for Senior Manager / Principal Consultant coaching
