@@ -58,10 +58,11 @@ function startScenario(scenarioId) {
 function getFirstHintForScenario(scenario) {
     const firstTransaction = scenario.transactions?.[0]?.code;
     const hints = {
-        payment_run_exception: "Start by reviewing the F110 payment run proposal status and its exceptions.",
-        cost_center_overrun:   "Start by running KSB1 for cost center 10103000 to see the variance vs plan.",
-        copa_margin_analysis:  "Start by executing KE30 to generate the CO-PA segment profitability report.",
-        billing_credit_block:  "Start by reproducing the billing issue in VF01."
+        payment_run_exception:    "Start by reviewing the F110 payment run proposal status and its exceptions.",
+        cost_center_overrun:      "Start by running KSB1 for cost center 10103000 to see the variance vs plan.",
+        copa_margin_analysis:     "Start by executing KE30 to generate the CO-PA segment profitability report.",
+        billing_credit_block:     "Start with VF01 — reproduce the billing error first, then use VKM3 to investigate the credit block.",
+        grir_mismatch_period_end: "Start with MB51 to confirm no GR has been posted for PO 4500099901, then check the PO status in ME23N."
     };
     return hints[scenario.id] || `Start with transaction ${firstTransaction || "F110"}.`;
 }
@@ -105,16 +106,16 @@ function normalizeCommand(rawInput) {
 function handleProfessionalMode(input) {
     if (!state.selectionScreen.active) {
         const supportedTransactions = [
-            // FI / CO
-            "FB03", "FS10N", "KSB1", "F110", "KE30", "FBL1N",
+            // FI / CO / AP
+            "FB03", "FS10N", "KSB1", "F110", "KE30", "FBL1N", "FBL5N", "MIRO",
             // SD / O2C
             "VA03", "VA05", "VL03N", "VF01", "VF04", "VKM3", "MMBE", "MB51"
         ];
         if (!supportedTransactions.includes(input)) {
-            printLine(`Transaction ${input} is not yet available in Professional Mode.`, "error");
-            printLine("FI/CO: FB03, FS10N, KSB1, F110, KE30, FBL1N", "info");
+            printLine(`Transaction ${input} is not yet available in Professional Mode.`, "warning");
+            printLine("FI/CO: FB03, FS10N, KSB1, F110, KE30, FBL1N, FBL5N, MIRO", "info");
             printLine("SD/O2C: VA03, VA05, VL03N, VF01, VF04, VKM3, MMBE, MB51", "info");
-            updateStatus("Unsupported transaction for Professional Mode.", "error");
+            updateStatus(`${input} — not yet available. See supported transactions above.`, "warning");
             showPrompt();
             return;
         }
@@ -223,11 +224,14 @@ function handleCommand(rawInput) {
         if (state.activeScenario) {
             const txList = state.activeScenario.transactions.map(t => t.code).join(" → ");
             printLine(`Bob: Scenario: "${state.activeScenario.title}"`, "info");
-            printLine(`Bob: Recommended investigation path: ${txList}`, "info");
+            printLine(`Bob: Module: ${state.activeScenario.module}  |  Level: ${state.activeScenario.level}`, "info");
+            printLine(`Bob: Investigation path: ${txList}`, "info");
+            printLine(`Bob: Progress: ${state.completedSteps.length} / ${state.activeScenario.investigationPath.length} steps completed`, "info");
             printLine(`Bob: Current hint: ${state.currentHint}`, "warning");
         } else {
             printLine("Bob: FI/CO transactions: F110, FBL1N, FB03, FS10N, KSB1, KE30", "info");
-            printLine("Bob: SD transactions: VF01, VKM3, VA03, VA05, VF04, VL03N, MMBE, MB51", "info");
+            printLine("Bob: FI-AR/SD transactions: FBL5N, VKM3, VF01, VA03, VA05, VF04, VL03N, MMBE, MB51", "info");
+            printLine("Bob: MM/FI transactions: MB51, MIRO", "info");
         }
         updateStatus("Help displayed.", "info");
         showPrompt();

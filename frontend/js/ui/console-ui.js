@@ -170,9 +170,16 @@ export function renderSidebar(state) {
         {
             id: "billing_credit_block",
             title: "Billing Blocked by Credit Management",
-            summary: "A customer cannot be billed because the sales document is blocked for credit review.",
+            summary: "Customer credit limit exceeded. Investigate overdue AR before releasing the block.",
             module: "SD-FI",
             level: "Consultant"
+        },
+        {
+            id: "grir_mismatch_period_end",
+            title: "GR/IR Mismatch: Invoice Posted Before Goods Receipt",
+            summary: "Account 191100 has a USD 95K open debit at period-end. Investigate and document for close.",
+            module: "MM-FI",
+            level: "Consultant / Senior Manager"
         }
     ];
 

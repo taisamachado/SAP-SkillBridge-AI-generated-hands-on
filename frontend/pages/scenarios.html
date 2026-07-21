@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice Scenarios – SAP SkillBridge</title>
-    <link rel="stylesheet" href="../css/fiori.css?v=5.0">
+    <link rel="stylesheet" href="../css/fiori.css?v=6.0">
     <style>
         /* ── Page layout ─────────────────────────────────── */
         body { overflow: auto; background: #f2f2f2; }
@@ -319,6 +319,7 @@
         <div class="page-header">
             <h1>🎯 Interactive Practice Scenarios</h1>
             <p>Practice real SAP FI/CO Senior Manager situations step by step — with coaching, terminal output, and multiple-choice questions</p>
+            <p style="margin-top:8px;font-size:13px;color:#107e3e;font-weight:600;" id="completionCounter">0 / 5 completed</p>
         </div>
 
         <div id="scenariosList"></div>
@@ -821,6 +822,351 @@
                     ]
                 }
             ]
+        },
+
+        // ── SCENARIO 4 – SD/FI: Billing Blocked by Credit Management ────────
+        {
+            id: 4,
+            title: "🔵 Billing Blocked by Credit Management",
+            module: "SD-FI",
+            difficulty: "medium",
+            description: "A customer order is complete — goods delivered, outbound delivery confirmed — but the billing run fails. VF01 returns a credit block message. Investigate the root cause across SD and FI before the month-end billing deadline.",
+            duration: "20-25 min",
+            steps: [
+                {
+                    type: "situation",
+                    title: "Business Context",
+                    content: {
+                        time: "03:30 PM – Last working day of the month",
+                        alert: "VF01 billing creation fails for sales order 4500012347",
+                        customer: "1000234 – Precision Manufacturing Inc.",
+                        impact: "USD 285,000 billing document cannot be posted before month-end cut-off",
+                        pressure: "AR Manager: 'We need this billed today. Revenue recognition is at risk.'",
+                        risk: "Unbilled delivered goods = revenue deferred to next month"
+                    },
+                    symptoms: [
+                        "Sales order 4500012347 was fully delivered (delivery 8000006540)",
+                        "Goods Issue posted on 2026-06-29 — stock deducted from inventory",
+                        "VF01 returns error: 'Credit block: document cannot be billed'",
+                        "Customer 1000234 previously had a clean credit history"
+                    ]
+                },
+                {
+                    type: "question",
+                    question: "VF01 returns a credit block message. What is the FIRST transaction you run to investigate the root cause?",
+                    options: [
+                        { id: "A", text: "VKM3 – Blocked SD Documents for Credit Management", correct: true,
+                          feedback: "✅ CORRECT. VKM3 is the dedicated transaction for reviewing SD documents blocked by credit management. It shows the blocked document, the customer's credit limit, current exposure, and the specific reason for the block. This is step 1 for any credit-block investigation." },
+                        { id: "B", text: "VA03 – Display Sales Order to check status", correct: false,
+                          feedback: "❌ VA03 is useful later to review the full order context, but it doesn't show you why credit is blocked. Go to VKM3 first — it is the credit-block control station." },
+                        { id: "C", text: "FD32 – Change customer credit limit immediately", correct: false,
+                          feedback: "❌ Never change a credit limit before understanding why it is breached. FD32 is a change transaction — not an investigation tool. Always investigate with VKM3 first, then escalate for a credit limit change if warranted." },
+                        { id: "D", text: "FBL5N – Customer line items to check open receivables", correct: false,
+                          feedback: "❌ FBL5N shows accounts receivable open items but it is a reporting transaction. The credit block is managed in VKM3. Start there to understand what is blocking the billing." }
+                    ]
+                },
+                {
+                    type: "result",
+                    title: "VKM3 – Blocked SD Documents for Credit Management",
+                    content: "You open VKM3 for credit control area 1000, filtering on customer 1000234:",
+                    terminalLines: [
+                        { cls: "t-header", text: "Blocked SD Documents — Credit Management (VKM3)" },
+                        { cls: "",         text: "Credit Control Area: 1000  |  Company Code: 1000  |  Key Date: 2026-06-30" },
+                        { cls: "",         text: "─────────────────────────────────────────────────────────────────────" },
+                        { cls: "t-header", text: "Customer   Document      Type  Value (USD)    Credit Limit   Exposure      Utilisation" },
+                        { cls: "t-err",   text: "1000234    4500012347    OR    285,000.00     500,000.00     534,218.00    106.8%" },
+                        { cls: "",         text: "─────────────────────────────────────────────────────────────────────" },
+                        { cls: "t-warn",  text: "Block Reason: Credit limit exceeded (utilisation 106.8%)" },
+                        { cls: "t-err",   text: "[X] Billing and delivery processing blocked. Message: V1 801." },
+                        { cls: "",         text: "" },
+                        { cls: "",         text: "Credit Exposure Breakdown:" },
+                        { cls: "",         text: "  Open orders (undelivered):      35,000.00  USD" },
+                        { cls: "",         text: "  Open deliveries (unconfirmed):  12,500.00  USD" },
+                        { cls: "",         text: "  Open AR (unpaid invoices):     201,718.00  USD" },
+                        { cls: "",         text: "  This billing document:         285,000.00  USD" },
+                        { cls: "t-warn",  text: "  Total exposure:                534,218.00  USD  vs limit 500,000.00" }
+                    ],
+                    analysis: "The root cause is clear: the customer's total credit exposure (USD 534,218) exceeds their credit limit (USD 500,000) by USD 34,218. The credit utilisation is 106.8%. The single largest component is open AR — USD 201,718 of unpaid invoices that are sitting in the customer's account. This is not a limit that needs to be raised: there are receivables to be collected first."
+                },
+                {
+                    type: "question",
+                    question: "Credit utilisation is 106.8%. The AR Manager asks: 'Can we just release the block so we can bill?'. What do you recommend?",
+                    options: [
+                        { id: "A", text: "Yes — the customer has been reliable before. Release the block in VKM3 immediately.", correct: false,
+                          feedback: "❌ Releasing a credit block without analysis is a governance failure. You have USD 201,718 in open AR from this customer. Adding USD 285,000 more exposure on top of an already-exceeded limit increases write-off risk significantly." },
+                        { id: "B", text: "No — investigate the open AR balance in FBL5N first. If the customer can pay some open invoices today, the exposure drops below the limit and the block releases automatically.", correct: true,
+                          feedback: "✅ CORRECT. This is the professional approach. The correct sequence is:\n1. Run FBL5N for customer 1000234 to review open AR\n2. Identify overdue invoices the customer can pay today\n3. Request payment of overdue AR to bring exposure below USD 500K\n4. Block releases automatically when exposure falls below limit\nOr: escalate to Finance Director for a formal credit limit review with documented business case." },
+                        { id: "C", text: "Ask the IT team to fix the credit check configuration so it stops blocking.", correct: false,
+                          feedback: "❌ The credit check is working correctly — it is protecting the business. Disabling it is a financial risk management failure, not a solution." },
+                        { id: "D", text: "Raise the credit limit in FD32 from USD 500K to USD 600K to resolve the block.", correct: false,
+                          feedback: "❌ Raising credit limits requires formal business justification, credit manager approval, and is not a same-day fix for month-end. Investigate the open AR first — the fix might already be available without any limit change." }
+                    ]
+                },
+                {
+                    type: "result",
+                    title: "FBL5N – Customer 1000234 Open Receivables",
+                    content: "You run FBL5N for customer 1000234, company code 1000, open items as of 2026-06-30:",
+                    terminalLines: [
+                        { cls: "t-header", text: "Customer Line Items – 1000234 (Precision Manufacturing Inc.)" },
+                        { cls: "",         text: "Company Code: 1000  |  Key Date: 2026-06-30  |  Open Items Only" },
+                        { cls: "",         text: "─────────────────────────────────────────────────────────────────────" },
+                        { cls: "",         text: "Document    Date        Invoice Ref.      Terms   Net Due      Amount (USD)    Overdue?" },
+                        { cls: "t-err",   text: "1800033201  2026-04-15  PMI-PO-4501       0030    2026-05-15   78,940.00       [X] 46 days" },
+                        { cls: "t-err",   text: "1800033288  2026-04-28  PMI-PO-4502       0030    2026-05-28   65,340.00       [X] 33 days" },
+                        { cls: "t-warn",  text: "1800034102  2026-05-30  PMI-PO-4503       0030    2026-06-29   57,438.00       [!] 1 day" },
+                        { cls: "t-ok",    text: "1800034560  2026-06-15  PMI-PO-4504       0030    2026-07-15   —               [OK] Not due" },
+                        { cls: "",         text: "─────────────────────────────────────────────────────────────────────" },
+                        { cls: "t-err",   text: "Overdue balance: USD 201,718.00  (3 invoices, oldest 46 days past due)" }
+                    ],
+                    analysis: "Two invoices are significantly overdue: USD 78,940 (46 days) and USD 65,340 (33 days). A third is one day past due. Total overdue: USD 201,718. If the customer pays just the two oldest invoices (USD 144,280), the exposure drops to USD 534,218 − USD 144,280 = USD 389,938 — well below the USD 500K limit. The billing block releases automatically when exposure falls below the limit."
+                },
+                {
+                    type: "action",
+                    title: "Resolution Path: Clearing Open AR to Release the Credit Block",
+                    content: "Based on the FBL5N analysis, you prepare the resolution recommendation:",
+                    commands: [
+                        "SAP SkillBridge – Credit Block Resolution Summary",
+                        "────────────────────────────────────────────────",
+                        "Customer:        1000234 – Precision Manufacturing Inc.",
+                        "Current Limit:   USD 500,000",
+                        "Current Exposure:USD 534,218  (106.8% utilisation)",
+                        "",
+                        "OVERDUE INVOICES (action required):",
+                        "  Doc 1800033201  USD  78,940  (46 days overdue)  ← COLLECT TODAY",
+                        "  Doc 1800033288  USD  65,340  (33 days overdue)  ← COLLECT TODAY",
+                        "  Doc 1800034102  USD  57,438  (1 day overdue)    ← Collect this week",
+                        "",
+                        "SCENARIO A — Partial collection:",
+                        "  Customer pays docs 1800033201 + 1800033288 = USD 144,280",
+                        "  New exposure: USD 534,218 − USD 144,280 = USD 389,938",
+                        "  Result: block releases automatically (389,938 < 500,000) ✅",
+                        "  VF01 billing of 4500012347 (USD 285,000) can proceed today",
+                        "",
+                        "SCENARIO B — Credit limit increase (requires Finance Director approval):",
+                        "  FD32: raise limit from USD 500K to USD 650K",
+                        "  Timeline: 2-3 business days for credit review board",
+                        "  Risk: higher exposure without addressing root cause (overdue AR)"
+                    ],
+                    stepGroups: [
+                        {
+                            title: "Recommended next steps:",
+                            actions: [
+                                "Contact customer 1000234 AR contact immediately — request payment of docs 1800033201 and 1800033288",
+                                "Once payment confirmed, post incoming payment with F-28 (Post Incoming Payment)",
+                                "Credit block releases automatically when exposure falls below USD 500K",
+                                "Re-run VF01 for sales order 4500012347 — billing document will be created",
+                                "Escalate to Finance Director if customer cannot pay today: formal credit limit review required"
+                            ]
+                        },
+                        {
+                            title: "What NOT to do:",
+                            actions: [
+                                "❌ Do not release the credit block manually in VKM3 without reducing the exposure first",
+                                "❌ Do not raise the credit limit without a formal credit review and Finance Director sign-off",
+                                "❌ Do not ship any additional orders to this customer while credit is in excess"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    type: "question",
+                    question: "The customer confirms payment of USD 144,280 (docs 1800033201 + 1800033288). What is the correct next action in SAP?",
+                    options: [
+                        { id: "A", text: "Post the incoming payment using F-28, which clears the AR items and automatically releases the credit block", correct: true,
+                          feedback: "✅ CORRECT. F-28 (Post Incoming Payment) posts the customer payment against the open AR items. Once docs 1800033201 and 1800033288 are cleared, the credit exposure drops from USD 534,218 to USD 389,938 — below the USD 500K limit. SAP automatically removes the credit block and VF01 can proceed." },
+                        { id: "B", text: "Go to VKM3 and manually release the block first, then post the payment later", correct: false,
+                          feedback: "❌ This is the wrong sequence. Posting the payment first reduces the exposure and the block releases automatically. Manual release before payment means you are releasing without actually reducing the exposure — which defeats the entire purpose of credit management." },
+                        { id: "C", text: "Create a credit memo in FB75 to reduce the customer's open balance", correct: false,
+                          feedback: "❌ A credit memo reduces what the customer owes you — it is used for returns or billing corrections. This is not a credit memo situation: the customer owes the money and is paying it. Use F-28 to post the incoming payment." },
+                        { id: "D", text: "Ask the AR team to clear the items manually via FB1S (Clear Accounts Receivable)", correct: false,
+                          feedback: "❌ Clearing without an actual incoming payment creates a false accounting entry. The correct process is: receive the payment → post it with F-28 → the clearing happens automatically as part of the payment posting." }
+                    ]
+                },
+                {
+                    type: "completion",
+                    title: "Scenario Complete!",
+                    summary: "You diagnosed a credit management block in VKM3, identified the root cause (overdue AR) in FBL5N, designed the resolution path without bypassing controls, and guided the AR team to the correct payment posting sequence.",
+                    score: {
+                        investigation: "Root cause identified",
+                        governance: "Controls preserved",
+                        communication: "AR team guided",
+                        resolution: "Correct sequence"
+                    },
+                    lessonsLearned: [
+                        "✅ VKM3 is the starting point for all credit management block investigations",
+                        "✅ Credit blocks have a business reason — always investigate before releasing",
+                        "✅ FBL5N reveals the open AR picture that drives the credit exposure",
+                        "✅ Reducing AR exposure (via payment) automatically releases the block",
+                        "✅ The correct sequence is: investigate → collect → post payment → billing released",
+                        "✅ Never raise credit limits without a formal credit review and documented approval",
+                        "✅ SD, FI-AR and credit management are tightly integrated in SAP S/4HANA"
+                    ]
+                }
+            ]
+        },
+
+        // ── SCENARIO 5 – MM/FI: Intercompany Stock Transfer – Missing GR ────
+        {
+            id: 5,
+            title: "🟣 Intercompany GR/IR Mismatch: Invoice Without Goods Receipt",
+            module: "MM-FI",
+            difficulty: "hard",
+            description: "A vendor invoice (MIRO) was posted for a purchase order, but the goods have not yet been received. The GR/IR clearing account shows a debit balance. Period-end close cannot proceed until the mismatch is resolved.",
+            duration: "25-35 min",
+            steps: [
+                {
+                    type: "situation",
+                    title: "Business Context",
+                    content: {
+                        time: "05:00 PM – Month-end closing day",
+                        alert: "GR/IR account 191100 shows unexpected debit balance of USD 95,000",
+                        po: "PO 4500099901 (200 units server components at USD 475 each = USD 95,000)",
+                        vendor: "V100004 – Apex Technology Components",
+                        problem: "Vendor invoice APEX-2026-5540 was posted in MIRO before the goods were received",
+                        pressure: "Period-close checklist: GR/IR clearing account must be reconciled before close"
+                    },
+                    symptoms: [
+                        "GR/IR account 191100 has a debit balance — invoice posted but no GR",
+                        "MIRO posted FI document 1900016001 on 2026-06-29",
+                        "No material document exists for GR against PO 4500099901",
+                        "Vendor confirmed goods shipped on 2026-06-27 — in transit"
+                    ]
+                },
+                {
+                    type: "question",
+                    question: "The GR/IR account has a debit balance caused by an invoice posted before goods receipt. What is the CORRECT way to investigate the situation?",
+                    options: [
+                        { id: "A", text: "Reverse the MIRO posting immediately using MR8M to eliminate the debit balance", correct: false,
+                          feedback: "❌ Reversing the invoice posting (MR8M) may be required eventually, but not before understanding the full picture. The goods are in transit — the vendor invoice may be legitimate. Reverse without investigation first creates more problems than it solves." },
+                        { id: "B", text: "Use MB51 (Material Document List) to confirm no GR has been posted, then review the PO status in ME23N and the FI document in FB03", correct: true,
+                          feedback: "✅ CORRECT. The correct investigation sequence is:\n1. MB51 — confirm no goods receipt material document exists for this PO\n2. ME23N — review the PO delivery status, expected delivery date, and open quantities\n3. FB03 — review the MIRO FI document to confirm the posting is correct\nThis triangulation gives you the complete picture before deciding on any corrective action." },
+                        { id: "C", text: "Post a manual journal entry to zero out the GR/IR debit balance", correct: false,
+                          feedback: "❌ Manual journal entries to a GR/IR account without a matching goods receipt is an accounting violation. The GR/IR account is cleared automatically when the GR is posted. Never override this with a manual entry." },
+                        { id: "D", text: "Contact the vendor and ask them to re-issue the invoice with a later date", correct: false,
+                          feedback: "❌ The invoice date cannot be changed retroactively and the goods have already been shipped. This is not an invoice problem — it is a timing issue between the invoice posting and the goods receipt." }
+                    ]
+                },
+                {
+                    type: "result",
+                    title: "MB51 + ME23N Investigation Results",
+                    content: "You run MB51 for PO 4500099901 (movement types 101/102) and then open the PO in ME23N:",
+                    terminalLines: [
+                        { cls: "t-header", text: "MB51 – Material Document List (PO 4500099901)" },
+                        { cls: "",         text: "Plant: 1010  |  Vendor: V100004  |  Date range: 2026-06-01 to 2026-06-30" },
+                        { cls: "",         text: "─────────────────────────────────────────────────────────────────────" },
+                        { cls: "t-warn",  text: "No material documents found for PO 4500099901 (movement type 101/102)" },
+                        { cls: "t-err",   text: "[X] Goods Receipt NOT yet posted. GR/IR account will show open debit." },
+                        { cls: "",         text: "" },
+                        { cls: "t-header", text: "ME23N – Purchase Order 4500099901 Status" },
+                        { cls: "",         text: "Vendor: V100004  |  Item: 010  |  Material: SRV-COMP-500" },
+                        { cls: "",         text: "Ordered Qty:   200 EA   |  Unit Price: USD 475.00   |  Total: USD 95,000.00" },
+                        { cls: "",         text: "─────────────────────────────────────────────────────────────────────" },
+                        { cls: "t-ok",    text: "Invoice Receipt:   [OK] FI doc 1900016001 posted 2026-06-29 (USD 95,000)" },
+                        { cls: "t-err",   text: "Goods Receipt:     [X]  Not posted — awaiting physical delivery" },
+                        { cls: "t-warn",  text: "Delivery Date:         2026-06-27 (vendor confirmed shipped, in transit)" },
+                        { cls: "",         text: "GR/IR Status:      Open debit USD 95,000 on account 191100" }
+                    ],
+                    analysis: "The investigation confirms the mismatch. Invoice posted (FI document 1900016001, USD 95,000) but Goods Receipt not yet posted. The GR/IR account 191100 has a debit of USD 95,000 — it will automatically clear when the GR is posted. The goods are in transit, confirmed shipped by vendor on 2026-06-27. This is a timing difference, not an error."
+                },
+                {
+                    type: "question",
+                    question: "The goods are in transit. The period must close today. The GR/IR account has USD 95,000 open debit. What is the correct period-close treatment?",
+                    options: [
+                        { id: "A", text: "Post a manual journal entry: DR Inventory / CR GR/IR to clear the balance artificially", correct: false,
+                          feedback: "❌ Manual clearing of GR/IR without a real goods receipt creates a permanent accounting error. When the GR is eventually posted in period 007, a second debit will appear on GR/IR — making the problem twice as bad." },
+                        { id: "B", text: "Document the GR/IR open item in the period-close notes as a timing difference. The GR is expected in early period 007 and will automatically clear the debit when posted.", correct: true,
+                          feedback: "✅ CORRECT. A GR/IR open item at period-end is a normal occurrence in any purchasing-driven company. The correct treatment is:\n1. Document the open item in the close checklist (amount, PO, reason, expected GR date)\n2. Confirm the goods are in transit (vendor evidence)\n3. Assign responsibility to warehouse to post GR immediately upon physical receipt\n4. Period-close can proceed — the GR/IR balance is disclosed, not adjusted\nAuditors expect GR/IR open items at period-end. What they audit is whether they are monitored and cleared promptly." },
+                        { id: "C", text: "Cancel PO 4500099901 and reissue it in period 007 to avoid the GR/IR mismatch", correct: false,
+                          feedback: "❌ Cancelling a PO after an invoice has been posted creates a much more complex problem. You cannot cancel a PO that has a posted invoice without first reversing the invoice — a multi-step process that cannot be completed on the last day of the period." },
+                        { id: "D", text: "Accrual entry: DR COGS / CR Accrued Liabilities for USD 95,000 to recognise the goods in this period", correct: false,
+                          feedback: "❌ An accrual entry here would double-count the cost — the invoice is already posted to the AP account (CR 300000) and the GR/IR DR is the matching offset. A COGS accrual on top of this would overstate cost of goods by USD 95,000." }
+                    ]
+                },
+                {
+                    type: "action",
+                    title: "Period-Close Documentation & GR/IR Reconciliation",
+                    content: "You prepare the period-close reconciliation note for account 191100 (GR/IR Clearing):",
+                    commands: [
+                        "GR/IR RECONCILIATION NOTE – Period 006 Close",
+                        "─────────────────────────────────────────────",
+                        "Account: 191100 – Goods Receipt / Invoice Receipt Clearing",
+                        "Company Code: 1000  |  Period: 006 / 2026",
+                        "",
+                        "OPEN ITEM:",
+                        "  PO:      4500099901",
+                        "  Vendor:  V100004 – Apex Technology Components",
+                        "  Material:SRV-COMP-500 (Server Components)",
+                        "  Quantity:200 EA  |  Value: USD 95,000.00",
+                        "  FI Doc:  1900016001  (IR posted 2026-06-29)",
+                        "  GR:      NOT YET POSTED — goods in transit",
+                        "",
+                        "CLASSIFICATION: Timing difference (transit inventory)",
+                        "EVIDENCE: Vendor delivery note APEX-DN-2026-1104 (shipped 2026-06-27)",
+                        "",
+                        "EXPECTED RESOLUTION:",
+                        "  GR to be posted in period 007 upon physical receipt (~2026-07-02)",
+                        "  Account 191100 will clear automatically when GR is posted via MIGO",
+                        "  Responsible: Plant 1010 Warehouse Manager (R. Kowalski)",
+                        "",
+                        "AUDIT STATUS: [OK] Disclosed — no adjustment required"
+                    ],
+                    stepGroups: [
+                        {
+                            title: "Period-close actions completed:",
+                            actions: [
+                                "✅ GR/IR account 191100 balance investigated — root cause identified",
+                                "✅ Open item documented in close checklist with PO, vendor, and amount",
+                                "✅ Goods-in-transit confirmed with vendor delivery note",
+                                "✅ Warehouse notified to post GR immediately upon receipt (MIGO)",
+                                "✅ Period 006 can proceed to close — balance is disclosed"
+                            ]
+                        },
+                        {
+                            title: "SAP transactions used in this investigation:",
+                            actions: [
+                                "MB51 — confirmed no GR material document exists for PO 4500099901",
+                                "ME23N — reviewed PO delivery status and confirmed goods in transit",
+                                "FB03 — reviewed MIRO FI document 1900016001 for accuracy",
+                                "FS10N — confirmed GR/IR account 191100 debit balance (USD 95,000)"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    type: "question",
+                    question: "In period 007, the warehouse posts the GR for PO 4500099901 via MIGO. What happens to the GR/IR account automatically?",
+                    options: [
+                        { id: "A", text: "Nothing — the GR/IR account must be cleared manually via F-03 (Clear G/L Account)", correct: false,
+                          feedback: "❌ The GR/IR clearing is fully automatic in SAP. When the GR is posted, the system credits account 191100 (GR/IR) and debits account 130000 (Inventory). The debit and credit on 191100 net to zero — the account is cleared without any manual intervention." },
+                        { id: "B", text: "The GR/IR account is automatically credited, clearing the debit from the invoice posting. Inventory account is debited. Net position on GR/IR becomes zero.", correct: true,
+                          feedback: "✅ CORRECT. This is SAP's three-way matching at work:\n• Invoice posting (MIRO): DR GR/IR 191100 / CR Vendor AP 300000\n• Goods receipt (MIGO): DR Inventory 130000 / CR GR/IR 191100\n• Result: GR/IR 191100 = zero (both sides cancel). Vendor is owed money. Inventory is on the books. Perfect automatic matching." },
+                        { id: "C", text: "A new FI document is created that reverses the original MIRO posting", correct: false,
+                          feedback: "❌ The GR posting does not reverse the MIRO. It creates a new FI document with the complementary entry (DR Inventory / CR GR/IR). The MIRO posting remains as-is. Together they complete the three-way match." },
+                        { id: "D", text: "The vendor payment is automatically triggered because the three-way match is now complete", correct: false,
+                          feedback: "❌ The three-way match enables payment — it does not trigger payment automatically. Payment still requires an F110 payment run (or manual payment) with the appropriate due date. The match just removes any holds on the invoice for payment processing." }
+                    ]
+                },
+                {
+                    type: "completion",
+                    title: "Scenario Complete!",
+                    summary: "You identified and correctly handled a GR/IR mismatch at period-end — one of the most common and most mishandled situations in SAP MM/FI. You avoided three wrong approaches that would have created audit findings.",
+                    score: {
+                        investigation: "Systematic (MB51 → ME23N → FB03)",
+                        "period-close": "Correctly documented",
+                        governance: "No manual overrides",
+                        "3-way match": "Understood"
+                    },
+                    lessonsLearned: [
+                        "✅ GR/IR account 191100 is cleared automatically when GR and IR are both posted",
+                        "✅ An open GR/IR debit at period-end is normal — it must be disclosed, not adjusted",
+                        "✅ MB51 confirms whether a goods receipt exists for a purchase order",
+                        "✅ ME23N shows the full PO lifecycle: ordered, GR, IR, and payment status",
+                        "✅ Three-way match: PO quantity = GR quantity = IR quantity — learn this deeply",
+                        "✅ Never post manual journal entries to GR/IR — let the matching logic work",
+                        "✅ Period-close documentation is as important as the technical resolution"
+                    ]
+                }
+            ]
         }
     ];
 
@@ -1004,7 +1350,58 @@
         continueBtn.disabled = false;
     }
 
+    // ── Score persistence (localStorage) ────────────────────────────────────
+    const STORAGE_KEY = "sap_skillbridge_progress";
+
+    function loadProgress() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveScenarioCompletion(scenarioId, scenarioTitle, scoreObj) {
+        const progress = loadProgress();
+        progress[scenarioId] = {
+            id: scenarioId,
+            title: scenarioTitle,
+            completedAt: new Date().toISOString(),
+            score: scoreObj
+        };
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        } catch (e) { /* storage unavailable */ }
+        updateProgressBadges();
+    }
+
+    function updateProgressBadges() {
+        const progress = loadProgress();
+        const completedIds = Object.keys(progress);
+        document.querySelectorAll(".scenario-card").forEach(card => {
+            const sc = card._scenarioData;
+            if (sc && completedIds.includes(String(sc.id))) {
+                card.classList.add("completed");
+                if (!card.querySelector(".completed-badge")) {
+                    const badge = document.createElement("span");
+                    badge.className = "badge badge-easy completed-badge";
+                    badge.textContent = "✓ Done";
+                    const row = card.querySelector(".scenario-header-row > div");
+                    if (row) row.prepend(badge);
+                }
+            }
+        });
+        // Update header counter
+        const total    = scenarios.length;
+        const done     = completedIds.length;
+        const counter  = document.getElementById("completionCounter");
+        if (counter) counter.textContent = `${done} / ${total} completed`;
+    }
+
     function renderCompletion(step) {
+        // Save progress when completion screen is rendered
+        saveScenarioCompletion(activeScenario.id, activeScenario.title, step.score);
+
         const scores = Object.entries(step.score).map(([k, v]) => `
             <div class="score-item">
                 <div class="score-label">${k}</div>
@@ -1014,6 +1411,9 @@
 
         const lessons = step.lessonsLearned.map(l => `<li>${l}</li>`).join("");
 
+        const progress  = loadProgress();
+        const totalDone = Object.keys(progress).length;
+
         modalBody.innerHTML = `
             <div class="completion-header">
                 <div class="trophy">🏆</div>
@@ -1021,6 +1421,9 @@
                 <p>${step.summary}</p>
             </div>
             <div class="score-grid">${scores}</div>
+            <div style="margin-top:14px;padding:10px 14px;background:#f0faf4;border-radius:6px;border-left:4px solid #107e3e;">
+                <strong style="font-size:13px;color:#0a4020;">Overall Progress: ${totalDone} / ${scenarios.length} scenarios completed</strong>
+            </div>
             <div style="margin-top:18px;">
                 <strong style="font-size:13px;">Lessons Learned:</strong>
                 <ul class="lessons-list" style="margin-top:10px;">${lessons}</ul>
@@ -1029,6 +1432,17 @@
         continueBtn.disabled = false;
         continueBtn.textContent = "Finish ✓";
     }
+
+    // ── Attach scenario data to card elements for badge update ───────────────
+    (function attachScenarioDataToCards() {
+        const cards = document.querySelectorAll(".scenario-card");
+        cards.forEach((card, i) => {
+            if (scenarios[i]) card._scenarioData = scenarios[i];
+        });
+    })();
+
+    // Apply completion badges on page load
+    updateProgressBadges();
     </script>
 </body>
 </html>

@@ -106,7 +106,7 @@ const scenarios = {
         ]
     },
 
-    // ─── SCENARIO 4 – retained for SD/O2C completeness ─────────────────────────
+    // ─── SCENARIO 4 – SD-FI: Billing Blocked by Credit Management ──────────────
     billing_credit_block: {
         id: "billing_credit_block",
         module: "SD-FI",
@@ -136,6 +136,42 @@ const scenarios = {
             "The learner identifies that billing is blocked by credit management rather than logistics failure.",
             "The learner uses VKM3 to investigate the blocked document.",
             "The learner explains which business checks should be validated before releasing the document."
+        ]
+    },
+
+    // ─── SCENARIO 5 – MM-FI: GR/IR Mismatch at Period-End ─────────────────────
+    grir_mismatch_period_end: {
+        id: "grir_mismatch_period_end",
+        module: "MM-FI",
+        level: "Consultant / Senior Manager",
+        title: "GR/IR Mismatch: Vendor Invoice Posted Without Goods Receipt",
+        summary: "GR/IR account 191100 shows a USD 95,000 debit at period-end. A vendor invoice was posted in MIRO before the goods arrived. Period-end close is blocked until the mismatch is investigated and documented.",
+        businessContext: "Company Code 1000. Plant 1010. Vendor V100004 (Apex Technology Components) sent invoice APEX-2026-5540 for PO 4500099901 (200 units server components, USD 95,000). The invoice was posted in MIRO on 2026-06-29 before the goods were physically received. The GR/IR clearing account 191100 shows an open debit. Goods are confirmed in transit — vendor shipped on 2026-06-27.",
+        initialProblem: "Period-close checklist: GR/IR account 191100 has an unexplained debit balance of USD 95,000. The Controller cannot sign off on period close until the balance is investigated and documented.",
+        bobIntro: "Scenario: You are the SAP MM/FI Consultant supporting the client's period-end close. The Controller flagged a GR/IR open item. Use MB51 to confirm whether a Goods Receipt exists, ME23N to check the PO status, and FB03 to review the MIRO posting. Document your finding for the close checklist.",
+        learningObjectives: [
+            "Understand the SAP three-way match: Purchase Order → Goods Receipt → Invoice Receipt.",
+            "Use MB51 to confirm whether a goods receipt material document has been posted.",
+            "Understand how GR/IR account 191100 works: debited by MIRO, credited by MIGO.",
+            "Apply correct period-close treatment for GR/IR timing differences.",
+            "Distinguish between errors (require correction) and timing differences (require disclosure)."
+        ],
+        transactions: [
+            { code: "MB51",  purpose: "Confirm no GR material document exists for PO 4500099901." },
+            { code: "MIRO",  purpose: "Review the MIRO FI document posted on 2026-06-29 for correctness." },
+            { code: "FB03",  purpose: "Display the FI document 1900016001 to confirm GR/IR posting entries." }
+        ],
+        investigationPath: [
+            { id: "confirm_no_gr_posted",    label: "Confirm no GR posted for PO 4500099901 (MB51)" },
+            { id: "review_miro_posting",     label: "Review the MIRO invoice posting (MIRO / FB03)" },
+            { id: "document_grir_open_item", label: "Document GR/IR open item in period-close checklist" }
+        ],
+        successCriteria: [
+            "Learner uses MB51 to confirm no goods receipt has been posted.",
+            "Learner uses MIRO or FB03 to review the FI document entries for account 191100.",
+            "Learner correctly identifies this as a timing difference, not an error.",
+            "Learner recommends disclosing the open item in the close checklist rather than posting a manual journal entry.",
+            "Learner understands that posting the GR via MIGO in period 007 will automatically clear the GR/IR account."
         ]
     }
 };

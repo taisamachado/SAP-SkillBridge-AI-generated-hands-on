@@ -152,6 +152,26 @@ html, body {
     cursor: pointer;
 }
 
+/* ── SHELL SCENARIOS LINK ────────────────────────────────────────────────── */
+.shell-scenarios-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+.shell-scenarios-link:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+}
+
 /* ── MAIN LAYOUT ─────────────────────────────────────────────────────────── */
 .fiori-layout {
     display: flex;

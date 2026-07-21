@@ -23,7 +23,10 @@ export function renderSelectionScreen(transactionCode, state) {
         KSB1:  renderKSB1SelectionScreen,
         F110:  renderF110SelectionScreen,
         KE30:  renderKE30SelectionScreen,
-        FBL1N: renderFBL1NSelectionScreen
+        FBL1N: renderFBL1NSelectionScreen,
+        // FI-AR / MM-FI transactions
+        FBL5N: renderFBL5NSelectionScreen,
+        MIRO:  renderMIROSelectionScreen
     };
 
     const renderer = screens[transactionCode];
@@ -32,7 +35,7 @@ export function renderSelectionScreen(transactionCode, state) {
             <div class="training-callout warning">
                 <strong>Selection screen not yet implemented for ${transactionCode}</strong>
             </div>
-            <p>Professional Mode is available for: VA03, VA05, VL03N, VF01, VF04, VKM3, MMBE, MB51, FB03, FS10N, KSB1, F110, KE30, FBL1N</p>
+            <p>Professional Mode available: VA03, VA05, VL03N, VF01, VF04, VKM3, MMBE, MB51, FB03, FS10N, KSB1, F110, KE30, FBL1N, FBL5N, MIRO</p>
         `;
     }
 
@@ -446,7 +449,10 @@ export function renderResultGrid(transactionCode, filters, state) {
         KSB1:  renderKSB1ResultGrid,
         F110:  renderF110ResultGrid,
         KE30:  renderKE30ResultGrid,
-        FBL1N: renderFBL1NResultGrid
+        FBL1N: renderFBL1NResultGrid,
+        // FI-AR / MM-FI
+        FBL5N: renderFBL5NResultGrid,
+        MIRO:  renderMIROResultGrid
     };
 
     const renderer = grids[transactionCode];
@@ -1686,4 +1692,232 @@ function renderFBL1NResultGrid(filters, state) {
     `;
 }
 
-// Made with Bob - Enhanced with FI/CO module for Senior Manager preparation
+// ─── FBL5N – Customer Line Items (AR) ────────────────────────────────────────
+
+/**
+ * FBL5N – Customer Line Items
+ * Displays open/cleared AR line items per customer. Key for credit exposure analysis.
+ */
+function renderFBL5NSelectionScreen(state) {
+    return `
+        <div class="sap-selection-screen">
+            <div class="sap-screen-header">
+                <span class="sap-tcode">FBL5N</span>
+                <span class="sap-screen-title">Customer Line Items</span>
+            </div>
+            <div class="sap-toolbar">
+                <button class="sap-btn" id="executeButton">&#x25B6; Execute (F8)</button>
+                <button class="sap-btn" id="clearButton">Clear</button>
+                <button class="sap-btn" id="backButton">Back</button>
+            </div>
+            <div class="sap-form-section">
+                <h4 class="sap-section-title">Selection Criteria</h4>
+                <div class="sap-form-row">
+                    <label class="sap-label">Customer Account</label>
+                    <input class="sap-input" id="customerCode" type="text" maxlength="10"
+                        placeholder="e.g. 1000234" value="1000234">
+                </div>
+                <div class="sap-form-row">
+                    <label class="sap-label">Company Code</label>
+                    <input class="sap-input" id="companyCode" type="text" maxlength="4"
+                        placeholder="1000" value="1000">
+                </div>
+                <div class="sap-form-row">
+                    <label class="sap-label">Open Items at Key Date</label>
+                    <input class="sap-input" id="keyDate" type="text" maxlength="10"
+                        placeholder="2026-06-30" value="2026-06-30">
+                </div>
+                <div class="sap-checkbox-row">
+                    <input type="checkbox" id="openItems" checked>
+                    <label>Open Items</label>
+                    <input type="checkbox" id="clearedItems">
+                    <label>Cleared Items</label>
+                    <input type="checkbox" id="overdueOnly">
+                    <label>Overdue Only</label>
+                </div>
+            </div>
+            <div class="sap-hint-bar">[i] FBL5N shows AR open items per customer. Use this to understand the credit exposure before releasing a credit block in VKM3.</div>
+        </div>
+    `;
+}
+
+function renderFBL5NResultGrid(filters, state) {
+    const customerCode = filters.customerCode || "1000234";
+    const coCode       = filters.companyCode  || "1000";
+
+    // Static AR data for customer 1000234 (Precision Manufacturing)
+    const arItems = [
+        { doc: "1800033201", date: "2026-04-15", invoiceRef: "PMI-PO-4501", terms: "0030", netDue: "2026-05-15", amount: 78940.00,  daysOverdue: 46  },
+        { doc: "1800033288", date: "2026-04-28", invoiceRef: "PMI-PO-4502", terms: "0030", netDue: "2026-05-28", amount: 65340.00,  daysOverdue: 33  },
+        { doc: "1800034102", date: "2026-05-30", invoiceRef: "PMI-PO-4503", terms: "0030", netDue: "2026-06-29", amount: 57438.00,  daysOverdue: 1   },
+        { doc: "1800034560", date: "2026-06-15", invoiceRef: "PMI-PO-4504", terms: "0030", netDue: "2026-07-15", amount: 112500.00, daysOverdue: null }
+    ];
+
+    const overdueItems = arItems.filter(i => i.daysOverdue !== null);
+    const totalOpen    = arItems.reduce((s, i) => s + i.amount, 0);
+    const totalOverdue = overdueItems.reduce((s, i) => s + i.amount, 0);
+
+    const rows = arItems.map(i => {
+        const overdueBadge = i.daysOverdue !== null
+            ? (i.daysOverdue > 10
+                ? `<span class="status-blocked">[X] ${i.daysOverdue} days overdue</span>`
+                : `<span class="status-warn">[!] ${i.daysOverdue} day overdue</span>`)
+            : `<span class="status-ok">[OK] Not due</span>`;
+        return `<tr>
+            <td>${i.doc}</td>
+            <td>${i.date}</td>
+            <td>${i.invoiceRef}</td>
+            <td>${i.terms}</td>
+            <td>${i.netDue}</td>
+            <td class="number">${i.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })} USD</td>
+            <td>${overdueBadge}</td>
+        </tr>`;
+    }).join("");
+
+    return `
+        <div class="sap-result-grid">
+            <div class="sap-result-header">
+                <div class="sap-result-meta">
+                    <span class="sap-kv"><strong>Customer:</strong> ${customerCode} – Precision Manufacturing Inc.</span>
+                    <span class="sap-kv"><strong>Company Code:</strong> ${coCode}</span>
+                    <span class="sap-kv"><strong>Open Items:</strong> ${arItems.length}</span>
+                    <span class="sap-kv"><strong>Total Open Balance:</strong> USD ${totalOpen.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div class="sap-result-meta secondary">
+                    <span class="fi-kpi-card warn">
+                        <span class="fi-kpi-label">Overdue Balance</span>
+                        <span class="fi-kpi-value">USD ${totalOverdue.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                        <span class="fi-kpi-count">${overdueItems.length} invoice(s) overdue</span>
+                    </span>
+                    <span class="fi-kpi-card ${totalOverdue > 0 ? "err" : "ok"}">
+                        <span class="fi-kpi-label">Credit Limit Risk</span>
+                        <span class="fi-kpi-value">${totalOverdue > 0 ? "Overdue AR driving block" : "No overdue items"}</span>
+                    </span>
+                </div>
+            </div>
+            <table class="sap-grid-table">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Doc Date</th>
+                        <th>Invoice Ref.</th>
+                        <th>Pymt Terms</th>
+                        <th>Net Due Date</th>
+                        <th class="number">Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+            <div class="sap-message-bar ${overdueItems.length > 0 ? "warning" : "success"}">
+                ${overdueItems.length > 0
+                    ? `[!] ${overdueItems.length} overdue item(s) – total USD ${totalOverdue.toLocaleString("en-US", { minimumFractionDigits: 2 })}. Collection required to release credit block.`
+                    : `[OK] No overdue items. Customer AR is current.`}
+            </div>
+        </div>
+    `;
+}
+
+// ─── MIRO – Vendor Invoice Verification ──────────────────────────────────────
+
+/**
+ * MIRO – Enter Incoming Invoice
+ * Used to post and review vendor invoices against purchase orders. Core MM/FI transaction.
+ */
+function renderMIROSelectionScreen(state) {
+    return `
+        <div class="sap-selection-screen">
+            <div class="sap-screen-header">
+                <span class="sap-tcode">MIRO</span>
+                <span class="sap-screen-title">Enter Incoming Invoice</span>
+            </div>
+            <div class="sap-toolbar">
+                <button class="sap-btn" id="executeButton">&#x25B6; Display / Post</button>
+                <button class="sap-btn" id="clearButton">Clear</button>
+                <button class="sap-btn" id="backButton">Back</button>
+            </div>
+            <div class="sap-form-section">
+                <h4 class="sap-section-title">Invoice Reference</h4>
+                <div class="sap-form-row">
+                    <label class="sap-label">Purchase Order</label>
+                    <input class="sap-input" id="poNumber" type="text" maxlength="10"
+                        placeholder="e.g. 4500099901" value="4500099901">
+                </div>
+                <div class="sap-form-row">
+                    <label class="sap-label">Invoice Reference</label>
+                    <input class="sap-input" id="invoiceRef" type="text" maxlength="20"
+                        placeholder="e.g. APEX-2026-5540" value="APEX-2026-5540">
+                </div>
+                <div class="sap-form-row">
+                    <label class="sap-label">Invoice Date</label>
+                    <input class="sap-input" id="invoiceDate" type="text" maxlength="10"
+                        placeholder="2026-06-29" value="2026-06-29">
+                </div>
+                <div class="sap-form-row">
+                    <label class="sap-label">Amount</label>
+                    <input class="sap-input" id="invoiceAmount" type="text" maxlength="15"
+                        placeholder="95000.00" value="95000.00">
+                    <label class="sap-label">Currency</label>
+                    <input class="sap-input short" id="currency" type="text" maxlength="3"
+                        placeholder="USD" value="USD">
+                </div>
+            </div>
+            <div class="sap-hint-bar">[i] MIRO posts vendor invoices matched to a Purchase Order. When posted, SAP debits GR/IR 191100 and credits AP 300000. GR/IR clears automatically when the Goods Receipt is posted.</div>
+        </div>
+    `;
+}
+
+function renderMIROResultGrid(filters, state) {
+    const poNumber = filters.poNumber || "4500099901";
+    const invoiceRef = filters.invoiceRef || "APEX-2026-5540";
+    const amount = parseFloat(filters.invoiceAmount) || 95000.00;
+
+    return `
+        <div class="sap-result-grid">
+            <div class="sap-result-header">
+                <div class="sap-result-meta">
+                    <span class="sap-kv"><strong>PO:</strong> ${poNumber}</span>
+                    <span class="sap-kv"><strong>Invoice Ref:</strong> ${invoiceRef}</span>
+                    <span class="sap-kv"><strong>FI Document:</strong> 1900016001</span>
+                    <span class="sap-kv"><strong>Vendor:</strong> V100004 – Apex Technology Components</span>
+                </div>
+                <div class="training-callout warning" style="margin-top:8px;">
+                    <strong>[!] GR/IR Mismatch:</strong> Invoice posted but no Goods Receipt exists for PO ${poNumber}.
+                    Account 191100 (GR/IR Clearing) has an open debit of USD ${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}.
+                </div>
+            </div>
+            <table class="sap-grid-table">
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Description</th>
+                        <th class="number">Debit (USD)</th>
+                        <th class="number">Credit (USD)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td>191100</td>
+                        <td>GR/IR Clearing Account</td>
+                        <td class="number">${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
+                        <td class="number">—</td>
+                        <td><span class="status-blocked">[!] Open – awaiting GR</span></td>
+                    </tr>
+                    <tr>
+                        <td>300000</td>
+                        <td>AP – Apex Technology Components</td>
+                        <td class="number">—</td>
+                        <td class="number">${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
+                        <td><span class="status-ok">[OK] Vendor payable created</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="sap-message-bar warning">
+                [!] GR/IR account 191100 will clear automatically when Goods Receipt is posted via MIGO. Do not post a manual journal entry to this account.
+            </div>
+        </div>
+    `;
+}
+
+// Made with Bob - Enhanced with FI/CO, SD/FI, MM/FI modules for Senior Manager preparation

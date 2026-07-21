@@ -340,6 +340,171 @@ const transactionResponses = {
         ]
     },
 
+    // ───── SD/FI TRANSACTIONS – SCENARIO 4 (Credit Block / Billing) ──────────
+
+    FBL5N: {
+        completedStep: "review_customer_ar",
+        hint: "You reviewed customer AR open items. The overdue balance is the root cause of the credit limit breach. Now prepare the resolution path: collect overdue AR to bring exposure below the credit limit.",
+        statusMessage: "Customer open receivables displayed. Overdue balance identified as credit block driver.",
+        statusType: "warning",
+        screen: {
+            title: "Customer 1000234 – Open Receivables (FBL5N)",
+            subtitle: "FBL5N – Customer Line Item Display",
+            html: `
+                <div class="training-callout warning">
+                    <strong>Customer:</strong> 1000234 – Precision Manufacturing Inc. | <strong>Company Code:</strong> 1000
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Document</th>
+                            <th>Date</th>
+                            <th>Invoice Ref.</th>
+                            <th>Net Due Date</th>
+                            <th>Amount (USD)</th>
+                            <th>Overdue?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>1800033201</td>
+                            <td>2026-04-15</td>
+                            <td>PMI-PO-4501</td>
+                            <td>2026-05-15</td>
+                            <td class="number">78,940.00</td>
+                            <td class="status-blocked">[X] 46 days overdue</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>1800033288</td>
+                            <td>2026-04-28</td>
+                            <td>PMI-PO-4502</td>
+                            <td>2026-05-28</td>
+                            <td class="number">65,340.00</td>
+                            <td class="status-blocked">[X] 33 days overdue</td>
+                        </tr>
+                        <tr>
+                            <td>1800034102</td>
+                            <td>2026-05-30</td>
+                            <td>PMI-PO-4503</td>
+                            <td>2026-06-29</td>
+                            <td class="number">57,438.00</td>
+                            <td class="status-warn">[!] 1 day overdue</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> The overdue balance (USD 201,718) is the root cause of the credit limit breach. If the customer pays docs 1800033201 + 1800033288 (USD 144,280), the credit exposure drops below USD 500K and the billing block releases automatically. Contact the customer today — do not release the block manually.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered FBL5N to review customer 1000234 open receivables.", type: "prompt" },
+            { text: "Bob: Correct. FBL5N is the AR equivalent of FBL1N. It shows all customer open items — perfect for understanding the credit exposure picture.", type: "success" },
+            { text: "Bob: You found USD 201,718 in overdue AR — this is driving the credit limit breach and the billing block.", type: "warning" },
+            { text: "Bob: The resolution is to collect the overdue AR. If USD 144,280 is paid, the credit block releases automatically. Post the incoming payment with F-28.", type: "info" }
+        ]
+    },
+
+    // ─── MM/FI TRANSACTIONS – SCENARIO 5 (GR/IR Mismatch) ──────────────────
+
+    MB51: {
+        completedStep: "confirm_no_gr_posted",
+        hint: "MB51 confirmed no goods receipt exists for PO 4500099901. Now open the PO in ME23N to verify the full procurement status and expected delivery date.",
+        statusMessage: "No GR material document found for PO 4500099901. GR/IR mismatch confirmed.",
+        statusType: "warning",
+        screen: {
+            title: "MB51 – Material Document List",
+            subtitle: "Goods Receipt Confirmation for PO 4500099901",
+            html: `
+                <div class="training-callout warning">
+                    <strong>Search:</strong> PO 4500099901 | Movement Types: 101, 102 | Plant: 1010 | Date: Jun 2026
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Material Doc</th>
+                            <th>PO</th>
+                            <th>Material</th>
+                            <th>Plant</th>
+                            <th>Mvmt Type</th>
+                            <th>Quantity</th>
+                            <th>Posting Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" class="status-blocked" style="text-align:center;">[X] No material documents found for this PO in the selected period.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> MB51 confirms no goods receipt has been posted for PO 4500099901. The GR/IR account has a debit because the invoice was posted (MIRO) but no matching GR exists yet. The goods are in transit. Next step: open the PO in ME23N to review the expected delivery date and confirm the vendor shipment status.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered MB51 to review goods movements for PO 4500099901.", type: "prompt" },
+            { text: "Bob: Correct. MB51 is the material document list — it shows every goods movement posted against a material, PO, or plant.", type: "success" },
+            { text: "Bob: No goods receipt material document found. This confirms the GR/IR mismatch: invoice posted (MIRO) but no GR yet.", type: "warning" },
+            { text: "Bob: Review the PO in ME23N to understand the full delivery status before making a period-close decision.", type: "info" }
+        ]
+    },
+
+    MIRO: {
+        completedStep: "review_miro_posting",
+        hint: "The MIRO posting is confirmed. The invoice was posted correctly. The issue is that the GR has not yet been received. Check the PO status in ME23N.",
+        statusMessage: "Vendor invoice posting (MIRO) confirmed. FI document 1900016001 posted USD 95,000.",
+        statusType: "info",
+        screen: {
+            title: "MIRO – Vendor Invoice Posting Confirmed",
+            subtitle: "Enter Incoming Invoice – Document 1900016001",
+            html: `
+                <div class="training-callout success">
+                    <strong>Invoice Posted:</strong> FI Document 1900016001 | Vendor: V100004 – Apex Technology Components | Date: 2026-06-29
+                </div>
+
+                <table class="training-grid">
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Description</th>
+                            <th>Debit (USD)</th>
+                            <th>Credit (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>191100</td>
+                            <td>GR/IR Clearing Account</td>
+                            <td class="number">95,000.00</td>
+                            <td class="number">—</td>
+                        </tr>
+                        <tr>
+                            <td>300000</td>
+                            <td>AP – Apex Technology Components</td>
+                            <td class="number">—</td>
+                            <td class="number">95,000.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="training-callout info">
+                    <strong>Bob Coaching:</strong> This is the standard 2-step MM/FI posting. When MIRO is posted (invoice receipt), SAP debits GR/IR 191100 and credits AP 300000. When the GR is posted via MIGO, SAP debits Inventory 130000 and credits GR/IR 191100 — completing the three-way match. Until the GR is posted, 191100 has an open debit balance.
+                </div>
+            `
+        },
+        lines: [
+            { text: "You entered MIRO to review the vendor invoice entry.", type: "prompt" },
+            { text: "Bob: Good. MIRO is used to post or review vendor invoices against purchase orders.", type: "success" },
+            { text: "Bob: Document 1900016001 posted a debit to GR/IR account 191100 (USD 95,000) and a credit to AP 300000.", type: "info" },
+            { text: "Bob: The GR/IR will clear automatically when the goods receipt is posted via MIGO in period 007.", type: "info" }
+        ]
+    },
+
     // ───── SD/O2C TRANSACTIONS (EXISTING COACHING MODE) ──────────────────────
 
     VF01: {
