@@ -20,11 +20,56 @@ function clearWorkspace() {
 }
 
 export function printLine(text, type = "system") {
+    // Remove any existing awaiting-input prompt before adding a new line
+    const existing = getElement("consoleOutput").querySelector(".awaiting-input");
+    if (existing) existing.remove();
+
     const line = document.createElement("div");
     line.className = `console-line ${type}`;
     line.textContent = text;
     getElement("consoleOutput").appendChild(line);
     getElement("consoleOutput").scrollTop = getElement("consoleOutput").scrollHeight;
+}
+
+/**
+ * Show a pulsing "type your answer above ↑" prompt in the console
+ * and highlight the search bar in amber to guide the user.
+ * Called whenever Bob asks a question and is waiting for a transaction code.
+ */
+export function showBobAwaiting() {
+    // Remove any stale prompt first
+    const stale = getElement("consoleOutput").querySelector(".awaiting-input");
+    if (stale) stale.remove();
+
+    const line = document.createElement("div");
+    line.className = "console-line awaiting-input";
+    line.id = "bobAwaitingPrompt";
+    line.textContent = "▶  Type a transaction code in the search bar above ↑  and press Run";
+    getElement("consoleOutput").appendChild(line);
+    getElement("consoleOutput").scrollTop = getElement("consoleOutput").scrollHeight;
+
+    // Highlight search bar
+    const searchWrap = document.querySelector(".shell-search-wrap");
+    const searchInput = getElement("commandField");
+    if (searchWrap) searchWrap.classList.add("bob-waiting");
+    if (searchInput) {
+        searchInput.placeholder = "Type a transaction code to answer Bob…";
+        searchInput.focus();
+    }
+}
+
+/**
+ * Remove the awaiting prompt and reset the search bar to normal state.
+ * Called when the user submits a command.
+ */
+export function clearBobAwaiting() {
+    const prompt = document.getElementById("bobAwaitingPrompt");
+    if (prompt) prompt.remove();
+
+    const searchWrap = document.querySelector(".shell-search-wrap");
+    const searchInput = getElement("commandField");
+    if (searchWrap) searchWrap.classList.remove("bob-waiting");
+    if (searchInput) searchInput.placeholder = "Search apps or enter transaction code…";
 }
 
 export function renderWelcomeScreen(state) {
@@ -123,7 +168,8 @@ export function renderWelcomeScreen(state) {
 
         printLine(`Bob: Scenario loaded — "${scenario.title}"`, "success");
         printLine(`Bob: ${scenario.bobIntro}`, "info");
-        printLine(`Bob: ▶ Start — type  ${scenario.transactions[0]?.code || "F110"}  in the field above and press Run.`, "warning");
+        // Show the pulsing awaiting-input prompt so the user knows to type above
+        showBobAwaiting();
         setStatusBar(`Active scenario: ${scenario.title} — type ${scenario.transactions[0]?.code} and press Run`, "info");
     } else {
         getElement("transactionWorkspace").innerHTML = `

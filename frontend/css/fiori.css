@@ -378,6 +378,36 @@ html, body {
 .console-line.prompt  { color: #c8c8c8; }
 .console-line.system  { color: #a0c8e8; }
 
+/* ── BOB AWAITING INPUT — pulsing prompt line ──────────────────────────── */
+.console-line.awaiting-input {
+    color: #f6c76e;
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: bob-pulse 1.4s ease-in-out infinite;
+}
+@keyframes bob-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+}
+
+/* Search bar highlight when Bob is waiting */
+.shell-search-wrap.bob-waiting {
+    background: rgba(246, 199, 110, 0.18) !important;
+    border-color: #f6c76e !important;
+    box-shadow: 0 0 0 2px rgba(246, 199, 110, 0.35);
+    transition: all 0.3s;
+}
+.shell-search-wrap.bob-waiting .shell-search-input {
+    color: #fff !important;
+}
+.shell-search-wrap.bob-waiting .shell-search-input::placeholder {
+    color: rgba(246, 199, 110, 0.85) !important;
+}
+
 /* ── RIGHT SIDEBAR ───────────────────────────────────────────────────────── */
 .fiori-sidebar {
     width: 260px;

@@ -6,7 +6,9 @@ import {
     printLine,
     showPrompt,
     updateStatus,
-    renderTransactionScreen
+    renderTransactionScreen,
+    showBobAwaiting,
+    clearBobAwaiting
 } from "../ui/console-ui.js";
 import { renderSelectionScreen, renderResultGrid } from "../ui/professional-mode.js";
 import { getScenarioById, getAllScenarios } from "../scenarios/scenario-registry.js";
@@ -206,6 +208,9 @@ function executeSelectionScreen() {
 function handleCommand(rawInput) {
     const input = normalizeCommand(rawInput);
 
+    // Clear the awaiting indicator as soon as the user submits anything
+    clearBobAwaiting();
+
     if (!input) {
         updateStatus("No transaction entered.", "warning");
         showPrompt();
@@ -254,7 +259,17 @@ function handleCommand(rawInput) {
 
     renderSidebar(state);
     updateStatus(result.statusMessage, result.statusType);
-    showPrompt();
+
+    // Show awaiting prompt only in coaching mode when scenario is still in progress
+    if (
+        state.mode !== "professional" &&
+        state.activeScenario &&
+        state.userProgress.currentScenarioStatus !== "Completed"
+    ) {
+        showBobAwaiting();
+    } else {
+        showPrompt();
+    }
 }
 
 // ── Scenario selector buttons (right sidebar cards) ──────────────────────
