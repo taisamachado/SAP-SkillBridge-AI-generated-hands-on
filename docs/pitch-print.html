@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IBM Bob: SAP SkillBridge Sandbox — Pitch</title>
+<style>
+  /* ── Print setup ── */
+  @page {
+    size: A4;
+    margin: 18mm 18mm 16mm 18mm;
+  }
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  /* ── Base ── */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.5pt;
+    color: #1a1a2e;
+    line-height: 1.55;
+    background: #fff;
+  }
+
+  /* ── Layout helpers ── */
+  .page { width: 100%; max-width: 174mm; margin: 0 auto; }
+  .row  { display: flex; gap: 14pt; }
+  .col  { flex: 1; min-width: 0; }
+  .col-40 { flex: 0 0 40%; }
+  .col-60 { flex: 0 0 58%; }
+
+  /* ── IBM / SAP color palette ── */
+  :root {
+    --ibm-blue:   #0043ce;
+    --sap-blue:   #0070f2;
+    --dark:       #1a1a2e;
+    --mid:        #354a5e;
+    --muted:      #6a7282;
+    --light-bg:   #f4f7fb;
+    --border:     #dde4ed;
+    --green:      #107e3e;
+    --amber:      #c87800;
+    --purple:     #6e3fbd;
+  }
+
+  /* ══════════════════════════════════════════════
+     PAGE 1 — COVER
+  ══════════════════════════════════════════════ */
+  .cover-header {
+    background: var(--ibm-blue);
+    color: #fff;
+    padding: 22pt 24pt 18pt;
+    border-radius: 4pt;
+    margin-bottom: 18pt;
+  }
+  .cover-eyebrow {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 6pt;
+  }
+  .cover-title {
+    font-size: 22pt;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 4pt;
+    letter-spacing: -0.02em;
+  }
+  .cover-title span { color: #7eb8ff; }
+  .cover-subtitle {
+    font-size: 10.5pt;
+    color: rgba(255,255,255,0.80);
+    margin-bottom: 14pt;
+    max-width: 130mm;
+  }
+  .cover-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6pt;
+  }
+  .tag {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 2pt 8pt;
+    border-radius: 10pt;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* Problem / Solution blocks */
+  .section-label {
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sap-blue);
+    margin-bottom: 4pt;
+  }
+  .section-title {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8pt;
+    line-height: 1.2;
+  }
+  p { margin-bottom: 7pt; color: #2d3748; }
+
+  .highlight-box {
+    background: var(--light-bg);
+    border-left: 3pt solid var(--sap-blue);
+    padding: 9pt 12pt;
+    border-radius: 0 4pt 4pt 0;
+    margin: 10pt 0;
+  }
+  .highlight-box.green  { border-left-color: var(--green); }
+  .highlight-box.amber  { border-left-color: var(--amber); }
+  .highlight-box.purple { border-left-color: var(--purple); }
+
+  .highlight-box strong { color: var(--dark); }
+
+  /* Pain point list */
+  .pain-list { list-style: none; margin: 8pt 0; }
+  .pain-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 7pt;
+    margin-bottom: 6pt;
+    font-size: 9pt;
+    color: #2d3748;
+  }
+  .pain-icon {
+    font-size: 9pt;
+    flex-shrink: 0;
+    margin-top: 1pt;
+  }
+
+  /* Stat cards */
+  .stat-row { display: flex; gap: 10pt; margin: 12pt 0; }
+  .stat-card {
+    flex: 1;
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    border-radius: 4pt;
+    padding: 9pt 10pt;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--ibm-blue);
+    line-height: 1;
+    margin-bottom: 3pt;
+  }
+  .stat-label {
+    font-size: 7.5pt;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  /* Divider */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14pt 0;
+  }
+
+  /* ══════════════════════════════════════════════
+     PAGE 2 — SOLUTION
+  ══════════════════════════════════════════════ */
+  .page2-header {
+    background: var(--mid);
+    color: #fff;
+    padding: 12pt 18pt;
+    border-radius: 4pt;
+    margin-bottom: 16pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .page2-header .p-title { font-size: 13pt; font-weight: 700; }
+  .page2-header .p-sub   { font-size: 8.5pt; color: rgba(255,255,255,0.7); margin-top: 2pt; }
+  .page-num { font-size: 8pt; color: rgba(255,255,255,0.5); }
+
+  /* Feature grid */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+  .feature-card {
+    border: 1px solid var(--border);
+    border-radius: 4pt;
+    padding: 10pt 11pt;
+    background: #fff;
+  }
+  .feature-card-title {
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4pt;
+    display: flex;
+    align-items: center;
+    gap: 5pt;
+  }
+  .feature-icon {
+    font-size: 11pt;
+  }
+  .feature-card p {
+    font-size: 8.5pt;
+    color: var(--muted);
+    margin-bottom: 0;
+    line-height: 1.45;
+  }
+
+  /* Transaction table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    margin: 10pt 0;
+  }
+  thead tr { background: var(--mid); color: #fff; }
+  th {
+    padding: 5pt 8pt;
+    text-align: left;
+    font-weight: 600;
+    font-size: 7.5pt;
+    letter-spacing: 0.03em;
+  }
+  td { padding: 4pt 8pt; border-bottom: 1px solid var(--border); color: #2d3748; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) { background: #fafbfd; }
+
+  .tcode {
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    color: var(--sap-blue);
+    background: #eaf3fc;
+    padding: 1pt 5pt;
+    border-radius: 2pt;
+    font-size: 8pt;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 7pt;
+    font-weight: 700;
+    padding: 1pt 5pt;
+    border-radius: 8pt;
+    color: #fff;
+    vertical-align: middle;
+  }
+  .fi   { background: var(--ibm-blue); }
+  .co   { background: var(--purple); }
+  .sd   { background: var(--green); }
+  .mm   { background: var(--amber); }
+
+  /* ══════════════════════════════════════════════
+     PAGE 3 — IMPACT & ROADMAP
+  ══════════════════════════════════════════════ */
+  .page3-header {
+    background: linear-gradient(135deg, var(--ibm-blue) 0%, var(--sap-blue) 100%);
+    color: #fff;
+    padding: 12pt 18pt;
+    border-radius: 4pt;
+    margin-bottom: 16pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Impact table */
+  .impact-table thead tr { background: var(--ibm-blue); }
+
+  /* Roadmap timeline */
+  .roadmap { margin: 8pt 0; }
+  .roadmap-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10pt;
+  }
+  .roadmap-phase {
+    flex: 0 0 28%;
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    border-radius: 4pt 0 0 4pt;
+    padding: 8pt 10pt;
+    border-right: none;
+  }
+  .roadmap-phase.current {
+    background: var(--ibm-blue);
+    border-color: var(--ibm-blue);
+    color: #fff;
+  }
+  .roadmap-phase.current .phase-label { color: rgba(255,255,255,0.65); }
+  .roadmap-phase.current .phase-name  { color: #fff; }
+  .phase-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .phase-name  { font-size: 9pt; font-weight: 700; color: var(--dark); margin-top: 2pt; }
+
+  .roadmap-items {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 0 4pt 4pt 0;
+    padding: 8pt 12pt;
+    background: #fff;
+  }
+  .roadmap-items ul { list-style: none; }
+  .roadmap-items li {
+    font-size: 8.5pt;
+    color: #2d3748;
+    padding: 1.5pt 0;
+    display: flex;
+    align-items: center;
+    gap: 5pt;
+  }
+  .roadmap-items li::before { content: "✓"; color: var(--green); font-weight: 700; font-size: 8pt; flex-shrink: 0; }
+  .roadmap-items li.future::before { content: "→"; color: var(--sap-blue); }
+  .roadmap-items li.watsonx::before { content: "◆"; color: var(--purple); }
+
+  /* Quote */
+  .quote-box {
+    border: 1px solid var(--border);
+    border-left: 4pt solid var(--ibm-blue);
+    border-radius: 0 4pt 4pt 0;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    background: var(--light-bg);
+  }
+  .quote-text {
+    font-size: 10pt;
+    font-style: italic;
+    color: var(--dark);
+    line-height: 1.5;
+    margin-bottom: 5pt;
+  }
+  .quote-attr { font-size: 8pt; color: var(--muted); font-weight: 600; }
+
+  /* Footer */
+  .footer {
+    margin-top: 16pt;
+    padding-top: 10pt;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 7.5pt;
+    color: var(--muted);
+  }
+  .footer-logo { font-weight: 700; color: var(--ibm-blue); font-size: 8pt; }
+  .footer a { color: var(--sap-blue); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 1 — PROBLEM + OVERVIEW
+══════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="cover-header no-break">
+    <div class="cover-eyebrow">IBMer watsonx Challenge 2026</div>
+    <div class="cover-title">IBM Bob: SAP <span>SkillBridge</span> Sandbox</div>
+    <div class="cover-subtitle">A browser-based SAP S/4HANA simulator that trains consultant-level troubleshooting — no license, no infrastructure, no cost.</div>
+    <div class="cover-tags">
+      <span class="tag">SAP S/4HANA</span>
+      <span class="tag">FI · CO · SD · MM</span>
+      <span class="tag">IBM Bob AI Coaching</span>
+      <span class="tag">Zero Cost</span>
+      <span class="tag">Open Source</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-60">
+
+      <div class="section-label">The Problem</div>
+      <div class="section-title">SAP training is expensive, inaccessible, and disconnected from real consulting work</div>
+
+      <ul class="pain-list">
+        <li>
+          <span class="pain-icon">💸</span>
+          <span><strong>$3,000–$8,000 per seat</strong> for SAP training licenses. IBMers on the bench cannot access hands-on practice without significant budget approval.</span>
+        </li>
+        <li>
+          <span class="pain-icon">🔒</span>
+          <span><strong>Sandbox environments</strong> require infrastructure setup, system administration, and client or IBM IT approval — often unavailable during bench periods.</span>
+        </li>
+        <li>
+          <span class="pain-icon">📖</span>
+          <span><strong>E-learning platforms</strong> teach button-clicking workflows. They do not train the cross-module investigation reasoning that clients pay IBM consultants to apply.</span>
+        </li>
+        <li>
+          <span class="pain-icon">📉</span>
+          <span><strong>Skill decay on the bench</strong> means consultants arrive at engagements under-prepared, increasing ramp-up cost and client satisfaction risk.</span>
+        </li>
+      </ul>
+
+      <div class="highlight-box amber no-break">
+        <strong>The real gap:</strong> SAP consulting is not about knowing which screen to open — it is about understanding <em>why the system behaved that way</em> across FI, CO, SD, and MM. That reasoning cannot be trained by passive e-learning.
+      </div>
+
+    </div>
+    <div class="col-40">
+
+      <div class="stat-row" style="flex-direction:column; gap:8pt;">
+        <div class="stat-card">
+          <div class="stat-value">$0</div>
+          <div class="stat-label">Cost to run the simulator per consultant</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">18</div>
+          <div class="stat-label">SAP transactions implemented with full selection screens</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Real business scenarios across FI, CO, SD, MM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1</div>
+          <div class="stat-label">Python command to run — no npm, no build, no license</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="no-break">
+    <div class="section-label">The Core Distinction</div>
+    <div class="section-title">Consultant thinking, not end-user button-clicking</div>
+
+    <div class="row" style="margin-top:6pt;">
+      <div class="col">
+        <div class="highlight-box" style="height:100%;">
+          <strong>End User Training (existing tools)</strong><br>
+          <span style="font-size:8.5pt; color:#4a5568;">Teaches: "Open VA03, enter order number, click Display."<br>
+          Result: knows one screen, one workflow, one role.</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="highlight-box green" style="height:100%;">
+          <strong>SAP SkillBridge (this solution)</strong><br>
+          <span style="font-size:8.5pt; color:#4a5568;">Teaches: "Billing failed. Why? Credit block? Logistics issue? AR overdue? Which transaction reveals the root cause?"<br>
+          Result: cross-module investigation reasoning.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page 1 -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 2 — SOLUTION + TRANSACTIONS
+══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page2-header no-break">
+    <div>
+      <div class="p-title">Solution: What We Built</div>
+      <div class="p-sub">IBM Bob: SAP SkillBridge Sandbox — v1.1</div>
+    </div>
+    <div class="page-num">2 / 3</div>
+  </div>
+
+  <div class="feature-grid no-break">
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="feature-icon">🖥</span> SAP Fiori Interface</div>
+      <p>Shell bar, 3-level SAP menu tree, transaction search field, selection screens, result grids, status bar — visually identical to SAP S/4HANA Fiori. The consultant navigates the menu to find transactions, exactly as on a real engagement.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="feature-icon">🎯</span> Interactive Scenario Engine</div>
+      <p>5 business incidents with 7–8 investigation steps each. SAP terminal output, multiple-choice questions with detailed right/wrong explanations, completion score, and progress persistence via localStorage.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="feature-icon">⚙️</span> Professional Mode</div>
+      <p>Real SAP workflow: Selection Screen → Execute (F8) → Result Grid. No coaching, no hints — exactly like the real system. Used for interview preparation and timed practice.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="feature-icon">🤖</span> Bob Coaching Console</div>
+      <p>AI coaching layer providing real-time contextual guidance — describes the business problem, points to the relevant menu area, and explains findings in stakeholder language. Designed to evolve into a watsonx conversational layer.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="feature-icon">🗺</span> Transaction Roadmap</div>
+      <p>Visual reference page: all 18 transactions by module and sub-area, with full descriptions, process flow strips (O2C, P2P, CO variance), and scenario tags showing where each transaction is used in practice.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="feature-icon">📦</span> Zero Infrastructure</div>
+      <p>One Python file. No npm, no build pipeline, no SAP license, no cloud account. Runs on any laptop with Python 3. Open source on GitHub. Any IBMer on the bench can clone and start practicing in under 60 seconds.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="section-label" style="margin-bottom:6pt;">Scenarios &amp; Transactions Implemented</div>
+
+  <div class="row" style="gap:12pt;">
+    <div class="col">
+      <table class="no-break">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Module</th>
+            <th>Transaction Chain</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payment Run Blocked: Vendor Invoice Under Review</td>
+            <td><span class="badge fi">FI-AP</span></td>
+            <td><span class="tcode">F110</span> → <span class="tcode">FBL1N</span> → <span class="tcode">FB03</span></td>
+          </tr>
+          <tr>
+            <td>IT Cost Center Over-Budget: Period Close at Risk</td>
+            <td><span class="badge co">CO-OM</span></td>
+            <td><span class="tcode">KSB1</span> → <span class="tcode">FB03</span> → <span class="tcode">FS10N</span></td>
+          </tr>
+          <tr>
+            <td>CO-PA Board Report: Segment Profitability</td>
+            <td><span class="badge co">CO-PA</span></td>
+            <td><span class="tcode">KE30</span> → <span class="tcode">KSB1</span> → <span class="tcode">FS10N</span></td>
+          </tr>
+          <tr>
+            <td>Billing Blocked by Credit Management</td>
+            <td><span class="badge sd">SD-FI</span></td>
+            <td><span class="tcode">VKM3</span> → <span class="tcode">FBL5N</span> → <span class="tcode">F-28</span></td>
+          </tr>
+          <tr>
+            <td>GR/IR Mismatch: Invoice Before Goods Receipt</td>
+            <td><span class="badge mm">MM-FI</span></td>
+            <td><span class="tcode">MB51</span> → <span class="tcode">MIRO</span> → <span class="tcode">FB03</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top:10pt;" class="no-break">
+    <div class="highlight-box purple">
+      <strong>Architecture:</strong> Modular JavaScript (ES6 modules) — UI, simulation engine, scenario registry, transaction handlers, and master data are fully separated. New transactions and scenarios can be added without touching existing code. Master data includes 14 cost centers, 28 GL accounts, 4 vendors, 3 profit centers, and full O2C + P2P document sets.
+    </div>
+  </div>
+
+</div><!-- /page 2 -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 3 — IMPACT + ROADMAP + WATSONX
+══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page3-header no-break">
+    <div>
+      <div class="p-title">Business Impact &amp; Roadmap</div>
+      <div class="p-sub">IBM Bob: SAP SkillBridge Sandbox — v1.1</div>
+    </div>
+    <div class="page-num">3 / 3</div>
+  </div>
+
+  <div class="row" style="gap:14pt;">
+    <div class="col-60">
+
+      <div class="section-label">Business Impact</div>
+      <div class="section-title" style="font-size:11pt; margin-bottom:8pt;">Measurable value for IBM bench consultants and practice leads</div>
+
+      <table class="impact-table no-break">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Without Simulator</th>
+            <th>With SAP SkillBridge</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SAP practice cost per consultant</td>
+            <td style="color:#c0392b;">$3,000–$8,000</td>
+            <td style="color:#107e3e; font-weight:700;">$0</td>
+          </tr>
+          <tr>
+            <td>Time to practice a real scenario</td>
+            <td style="color:#c0392b;">Requires sandbox access</td>
+            <td style="color:#107e3e; font-weight:700;">20 min, any device</td>
+          </tr>
+          <tr>
+            <td>Cross-module reasoning training</td>
+            <td style="color:#c0392b;">Not available in e-learning</td>
+            <td style="color:#107e3e; font-weight:700;">5 scenarios, 8 steps each</td>
+          </tr>
+          <tr>
+            <td>Consultant readiness at engagement start</td>
+            <td style="color:#c0392b;">Highly variable</td>
+            <td style="color:#107e3e; font-weight:700;">Standardised baseline</td>
+          </tr>
+          <tr>
+            <td>Infrastructure / admin overhead</td>
+            <td style="color:#c0392b;">High (sandbox, IT access)</td>
+            <td style="color:#107e3e; font-weight:700;">Zero — Python 3 only</td>
+          </tr>
+          <tr>
+            <td>Scalability across IBM practices</td>
+            <td style="color:#c0392b;">License-bound, limited</td>
+            <td style="color:#107e3e; font-weight:700;">Unlimited, open source</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="quote-box no-break" style="margin-top:12pt;">
+        <div class="quote-text">"The investigation chain is always: understand the business problem → find the right transaction in the menu → read the output → explain the finding to the CFO. That is what this simulator trains."</div>
+        <div class="quote-attr">— Design principle, SAP SkillBridge Sandbox</div>
+      </div>
+
+    </div>
+
+    <div class="col-40">
+
+      <div class="section-label">Roadmap</div>
+      <div class="roadmap">
+
+        <div class="roadmap-row no-break">
+          <div class="roadmap-phase current">
+            <div class="phase-label">Now</div>
+            <div class="phase-name">v1.1 — Challenge Submission</div>
+          </div>
+          <div class="roadmap-items">
+            <ul>
+              <li>5 scenarios across FI, CO, SD, MM</li>
+              <li>18 transactions, full selection screens</li>
+              <li>SAP Fiori interface + 3-level menu</li>
+              <li>Bob coaching console</li>
+              <li>Score persistence (localStorage)</li>
+              <li>Transaction Roadmap page</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="roadmap-row no-break">
+          <div class="roadmap-phase">
+            <div class="phase-label">Next</div>
+            <div class="phase-name">v2.0 — Expansion</div>
+          </div>
+          <div class="roadmap-items">
+            <ul>
+              <li class="future">10+ additional scenarios</li>
+              <li class="future">Scenario difficulty progression</li>
+              <li class="future">Score history &amp; replay</li>
+              <li class="future">FI-AR, CO-OM extended transactions</li>
+              <li class="watsonx">watsonx conversational Bob layer</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="roadmap-row no-break">
+          <div class="roadmap-phase">
+            <div class="phase-label">Future</div>
+            <div class="phase-name">v3.0 — End User Mode</div>
+          </div>
+          <div class="roadmap-items">
+            <ul>
+              <li class="future">O2C end-to-end guided execution</li>
+              <li class="future">Procure-to-Pay full flow</li>
+              <li class="future">Role-based learning paths</li>
+              <li class="watsonx">watsonx personalised coaching</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="highlight-box purple no-break" style="margin-top:6pt;">
+        <strong style="font-size:8.5pt;">◆ watsonx Integration Path</strong><br>
+        <span style="font-size:8pt; color:#4a5568;">The Bob Coaching Console is architecturally designed to be replaced by a watsonx.ai conversational layer — adapting coaching messages to the consultant's actual investigation path in real time, providing personalised hints, and escalating explanations based on the user's role level.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <span class="footer-logo">IBM Bob: SAP SkillBridge Sandbox</span>
+      &nbsp;·&nbsp; IBMer watsonx Challenge 2026
+    </div>
+    <div>
+      <a href="https://github.com/taisamachado/SAP-SkillBridge-AI-generated-hands-on">github.com/taisamachado/SAP-SkillBridge-AI-generated-hands-on</a>
+    </div>
+    <div>Built with IBM Bob &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; Python 3 only</div>
+  </div>
+
+</div><!-- /page 3 -->
+
+</body>
+</html>
