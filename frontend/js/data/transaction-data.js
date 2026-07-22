@@ -1,3 +1,20 @@
+/**
+ * Generates a "Stuck? Click to reveal" hint pill for coaching screens.
+ * @param {string} nextTcode - The transaction code to reveal, e.g. "FBL1N"
+ * @param {string} hint - Short description, e.g. "Vendor Line Items"
+ */
+function hintPill(nextTcode, hint) {
+    return `
+        <button class="bob-hint-pill" onclick="
+            this.classList.add('revealed');
+            document.getElementById('commandField').value='${nextTcode}';
+            document.getElementById('commandField').focus();
+        ">
+            <span class="pill-label">💡 Stuck? Click to reveal the next transaction</span>
+            <span class="pill-answer">→ ${nextTcode} — ${hint}</span>
+        </button>`;
+}
+
 const transactionResponses = {
 
     // ───── FI/CO TRANSACTIONS (COACHING MODE) ─────────────────────────────────
@@ -49,6 +66,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> Document 1900012351 has a payment block R – manual release required. Before releasing this USD 470K payment, you must investigate the vendor open items and document the business justification. Which transaction would you use to review vendor V100002's open items?
+                    ${hintPill("FBL1N", "Vendor Line Items")}
                 </div>
             `
         },
@@ -106,6 +124,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> Document 1900012351 is marked with payment block R. This means a manual review is required before payment can be released. To validate the invoice details and confirm whether the block should be lifted, which transaction would you use to display the accounting document?
+                    ${hintPill("FB03", "Display FI Document")}
                 </div>
             `
         },
@@ -212,6 +231,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> The IT Operations cost center is USD 25,000 over-budget on account 820000 (IT Infrastructure and Software). This is a 13.2% overrun and must be explained before the Controller can close period 006. To trace the root cause, which transaction would you use to display the originating FI accounting document?
+                    ${hintPill("FB03", "Display FI Document")}
                 </div>
             `
         },
@@ -278,6 +298,7 @@ const transactionResponses = {
 
                 <div class="training-callout success">
                     <strong>Bob Coaching:</strong> You successfully executed the KE30 CO-PA report. The Electronics segment (PC-ELEC-NA) delivers the highest revenue (USD 4.85M) with a 21.6% EBIT margin. This is strong, but the CFO suspected margin compression. Your next step is to translate this into executive-level language for the Board: "Electronics segment is the revenue leader with healthy margin. Industrial segment margin is lower (16.9%) – recommend cost review." This is how Principal Consultants prepare CFO briefings.
+                    ${hintPill("KSB1", "Cost Center Actuals — validate Industrial cost drivers")}
                 </div>
             `
         },
@@ -396,6 +417,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> The overdue balance (USD 201,718) is the root cause of the credit limit breach. If the customer pays docs 1800033201 + 1800033288 (USD 144,280), the credit exposure drops below USD 500K and the billing block releases automatically. Contact the customer today — do not release the block manually.
+                    ${hintPill("FBL5N", "Customer Line Items — confirm overdue AR")}
                 </div>
             `
         },
@@ -443,6 +465,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> MB51 confirms no goods receipt has been posted for PO 4500099901. The GR/IR account has a debit because the invoice was posted (MIRO) but no matching GR exists yet. The goods are in transit. Next step: open the PO in ME23N to review the expected delivery date and confirm the vendor shipment status.
+                    ${hintPill("MIRO", "Review the MIRO invoice posting")}
                 </div>
             `
         },
@@ -539,6 +562,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> You confirmed that billing failed, but the logistics process is already complete. That means you should now investigate whether a financial or credit-related control is blocking the document.
+                    ${hintPill("VKM3", "Blocked SD Documents for Credit Management")}
                 </div>
             `
         },
@@ -584,6 +608,7 @@ const transactionResponses = {
 
                 <div class="training-callout info">
                     <strong>Bob Coaching:</strong> Excellent choice. You accessed VKM3 and confirmed that the document is blocked for credit review. Before releasing it, you should validate the customer, document value, risk exposure, and whether the release follows governance rules.
+                    ${hintPill("VA03", "Display Sales Order — validate the document context")}
                 </div>
             `
         },

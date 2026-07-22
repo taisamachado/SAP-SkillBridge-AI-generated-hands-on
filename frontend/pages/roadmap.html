@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Roadmap – SAP SkillBridge</title>
+    <link rel="stylesheet" href="../css/fiori.css?v=8.0">
+    <style>
+        body { overflow: auto; background: #f2f2f2; }
+
+        .roadmap-shell { min-height: 100vh; padding-top: 44px; }
+
+        .roadmap-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 24px 60px;
+        }
+
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 {
+            font-size: 22px;
+            font-weight: 400;
+            color: #32363a;
+            margin-bottom: 4px;
+        }
+        .page-header p { font-size: 14px; color: #6a6d70; max-width: 640px; }
+
+        /* ── Module block ──────────────────────────────────── */
+        .module-block {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .module-badge {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .badge-fi   { background: #0070f2; }
+        .badge-co   { background: #7c5cd8; }
+        .badge-sd   { background: #107e3e; }
+        .badge-mm   { background: #e07200; }
+
+        .module-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #32363a;
+        }
+        .module-desc {
+            font-size: 13px;
+            color: #6a6d70;
+            margin-left: auto;
+        }
+
+        /* ── Sub-area row ──────────────────────────────────── */
+        .subarea {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .subarea:last-child { border-bottom: none; }
+
+        .subarea-header {
+            padding: 10px 20px 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #89919a;
+            background: #fafafa;
+        }
+
+        /* ── Tcode grid ────────────────────────────────────── */
+        .tcode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0;
+            padding: 0 12px 12px;
+        }
+
+        .tcode-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 8px;
+            border-radius: 4px;
+            cursor: default;
+            transition: background 0.1s;
+        }
+        .tcode-card:hover { background: #f0f6ff; }
+
+        .tcode-badge {
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0070f2;
+            background: #eaf3fc;
+            padding: 3px 8px;
+            border-radius: 3px;
+            min-width: 56px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .tcode-info { min-width: 0; }
+        .tcode-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #32363a;
+            margin-bottom: 2px;
+        }
+        .tcode-desc {
+            font-size: 12px;
+            color: #6a6d70;
+            line-height: 1.4;
+        }
+        .tcode-scenario {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #107e3e;
+            background: #eaf7ed;
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+
+        /* ── Process flow strip ─────────────────────────────── */
+        .process-flow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0;
+            padding: 12px 20px;
+            background: #f7f8fa;
+            border-top: 1px solid #e5e5e5;
+            font-size: 12px;
+            color: #4a5568;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .flow-tcode {
+            font-family: monospace;
+            font-weight: 700;
+            color: #0070f2;
+            background: #eaf3fc;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        .flow-arrow {
+            color: #89919a;
+            font-size: 14px;
+            margin: 0 4px;
+        }
+        .flow-label {
+            font-size: 11px;
+            color: #6a6d70;
+        }
+
+        /* ── Legend ─────────────────────────────────────────── */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 20px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            font-size: 12px;
+            color: #4a5568;
+            align-items: center;
+        }
+        .legend-title { font-weight: 700; color: #32363a; margin-right: 4px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+
+        /* ── Back link ──────────────────────────────────────── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #0070f2;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="fiori-body roadmap-shell">
+
+    <!-- Shell bar -->
+    <header class="fiori-shell-bar">
+        <div class="shell-left">
+            <span class="shell-logo">SAP</span>
+            <span class="shell-app-title">S/4HANA Finance &amp; Controlling</span>
+        </div>
+        <div class="shell-right">
+            <a href="scenarios.html" class="shell-scenarios-link">🎯 Scenarios</a>
+            <span class="shell-meta">Client 1000</span>
+            <span class="shell-meta">S4H</span>
+            <div class="shell-user-avatar">C</div>
+        </div>
+    </header>
+
+    <div class="roadmap-container">
+        <a href="index.html" class="back-link">&#8592; Back to Simulator</a>
+
+        <div class="page-header">
+            <h1>🗺 SAP Transaction Roadmap</h1>
+            <p>All 18 transactions implemented in this simulator, organised by module and sub-area — exactly as they appear in the SAP Menu Tree. Use this as your reference when navigating the left menu.</p>
+        </div>
+
+        <!-- ── LEGEND ───────────────────────────────────────────────────── -->
+        <div class="legend">
+            <span class="legend-title">Legend:</span>
+            <span class="legend-item"><span class="tcode-badge" style="min-width:auto;">TCODE</span> Transaction code — type this in the search bar</span>
+            <span class="legend-item"><span class="tcode-scenario">Used in scenario</span> This transaction appears in at least one practice scenario</span>
+        </div>
+
+        <!-- ══ FINANCIAL ACCOUNTING ═══════════════════════════════════════ -->
+        <div class="module-block">
+            <div class="module-header">
+                <span class="module-badge badge-fi">FI</span>
+                <span class="module-title">Financial Accounting</span>
+                <span class="module-desc">Company code 1000 · Client 1000 · Currency USD</span>
+            </div>
+
+            <!-- General Ledger -->
+            <div class="subarea">
+                <div class="subarea-header">General Ledger</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">FB03</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Display Document</div>
+                            <div class="tcode-desc">View any FI accounting document — line items, account assignments, reference documents.</div>
+                            <span class="tcode-scenario">Used in: Payment Run, Cost Center, GR/IR</span>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">FS10N</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">G/L Account Balances</div>
+                            <div class="tcode-desc">Period-by-period debit/credit/balance display for any G/L account. Key for month-end close validation.</div>
+                            <span class="tcode-scenario">Used in: CO-PA Board Report, GR/IR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Payable -->
+            <div class="subarea">
+                <div class="subarea-header">Accounts Payable</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">F110</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Automatic Payment Program</div>
+                            <div class="tcode-desc">Manages vendor payment runs: parameters → proposal → exception review → payment posting.</div>
+                            <span class="tcode-scenario">Used in: Payment Run Blocked</span>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">FBL1N</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Display Vendor Line Items</div>
+                            <div class="tcode-desc">Open, cleared, and parked vendor items. Essential for AP reconciliation and payment block investigation.</div>
+                            <span class="tcode-scenario">Used in: Payment Run Blocked</span>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">MIRO</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Enter Incoming Invoice</div>
+                            <div class="tcode-desc">Post vendor invoices against purchase orders. Debits GR/IR account 191100, credits AP 300000.</div>
+                            <span class="tcode-scenario">Used in: GR/IR Mismatch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Receivable -->
+            <div class="subarea">
+                <div class="subarea-header">Accounts Receivable</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">FBL5N</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Display Customer Line Items</div>
+                            <div class="tcode-desc">Open AR items per customer. Use to analyse credit exposure and identify overdue invoices driving credit blocks.</div>
+                            <span class="tcode-scenario">Used in: Billing Credit Block</span>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">F-28</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Post Incoming Payment</div>
+                            <div class="tcode-desc">Post customer payments against open AR items. Clearing reduces credit exposure and can auto-release credit blocks.</div>
+                            <span class="tcode-scenario">Used in: Billing Credit Block</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- O2C Flow for FI -->
+            <div class="process-flow">
+                <strong style="margin-right:10px; color:#32363a;">AP Payment Flow:</strong>
+                <span class="flow-step"><span class="flow-tcode">MIRO</span><span class="flow-label">Post Invoice</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">FBL1N</span><span class="flow-label">Review Open Items</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">F110</span><span class="flow-label">Payment Run</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">FB03</span><span class="flow-label">Verify Document</span></span>
+            </div>
+        </div>
+
+        <!-- ══ CONTROLLING ════════════════════════════════════════════════ -->
+        <div class="module-block">
+            <div class="module-header">
+                <span class="module-badge badge-co">CO</span>
+                <span class="module-title">Controlling</span>
+                <span class="module-desc">Controlling Area 1000 · Operating Concern 1000</span>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Cost Center Accounting (CO-OM-CCA)</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">KSB1</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Cost Center Actual Line Items</div>
+                            <div class="tcode-desc">Individual cost postings per cost center per period with plan vs actual comparison. Primary tool for variance analysis.</div>
+                            <span class="tcode-scenario">Used in: IT Cost Center Overrun, CO-PA Report</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Profitability Analysis (CO-PA)</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">KE30</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Execute CO-PA Report</div>
+                            <div class="tcode-desc">Profitability by segment, customer, or product. Revenue, COGS, gross profit, OpEx and EBIT margin. Used in Board reporting.</div>
+                            <span class="tcode-scenario">Used in: CO-PA Board Report</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <strong style="margin-right:10px; color:#32363a;">CO Variance Flow:</strong>
+                <span class="flow-step"><span class="flow-tcode">KSB1</span><span class="flow-label">Find Variance</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">FB03</span><span class="flow-label">Trace Source Document</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">FS10N</span><span class="flow-label">Cross-check G/L</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">KE30</span><span class="flow-label">Segment Impact</span></span>
+            </div>
+        </div>
+
+        <!-- ══ SALES & DISTRIBUTION ══════════════════════════════════════ -->
+        <div class="module-block">
+            <div class="module-header">
+                <span class="module-badge badge-sd">SD</span>
+                <span class="module-title">Sales &amp; Distribution</span>
+                <span class="module-desc">Sales Org 1000 · Distribution Channel 10 · Division 01</span>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Sales Orders</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">VA03</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Display Sales Order</div>
+                            <div class="tcode-desc">Full sales document view: header data, items, schedule lines, delivery status, billing status, and credit status.</div>
+                            <span class="tcode-scenario">Used in: Billing Credit Block</span>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">VA05</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">List Sales Orders</div>
+                            <div class="tcode-desc">List of sales orders filtered by sold-to, material, sales org, date range. Overview reporting transaction.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Billing</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">VF01</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Create Billing Document</div>
+                            <div class="tcode-desc">Creates invoice (F2), credit/debit memos from sales orders or deliveries. Fails if credit block or delivery incomplete.</div>
+                            <span class="tcode-scenario">Used in: Billing Credit Block</span>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">VF04</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Billing Due List</div>
+                            <div class="tcode-desc">List of all deliveries and orders ready for billing. Used to run collective billing at period-end.</div>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">VKM3</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Blocked SD Documents</div>
+                            <div class="tcode-desc">Documents blocked by credit management. Shows credit limit, current exposure, utilisation %, and block reason.</div>
+                            <span class="tcode-scenario">Used in: Billing Credit Block</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Shipping</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">VL03N</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Display Outbound Delivery</div>
+                            <div class="tcode-desc">Delivery document: picking status, goods issue status, quantities, storage location, and route.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <strong style="margin-right:10px; color:#32363a;">Order-to-Cash Flow:</strong>
+                <span class="flow-step"><span class="flow-tcode">VA03</span><span class="flow-label">Sales Order</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">VL03N</span><span class="flow-label">Delivery</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">VF01</span><span class="flow-label">Billing</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">FBL5N</span><span class="flow-label">AR Open Item</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">F-28</span><span class="flow-label">Payment</span></span>
+            </div>
+        </div>
+
+        <!-- ══ MATERIALS MANAGEMENT ══════════════════════════════════════ -->
+        <div class="module-block">
+            <div class="module-header">
+                <span class="module-badge badge-mm">MM</span>
+                <span class="module-title">Materials Management</span>
+                <span class="module-desc">Plant 1010 · Storage Location 0001</span>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Inventory Management</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">MMBE</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Stock Overview</div>
+                            <div class="tcode-desc">Unrestricted, reserved, quality inspection, and blocked stock per plant and storage location.</div>
+                        </div>
+                    </div>
+                    <div class="tcode-card">
+                        <span class="tcode-badge">MB51</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Material Document List</div>
+                            <div class="tcode-desc">All goods movements (GR, GI, transfers) for a material or PO. Use movement type 101 to find goods receipts.</div>
+                            <span class="tcode-scenario">Used in: GR/IR Mismatch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subarea">
+                <div class="subarea-header">Invoice Verification (Logistics Invoice Verification)</div>
+                <div class="tcode-grid">
+                    <div class="tcode-card">
+                        <span class="tcode-badge">MIRO</span>
+                        <div class="tcode-info">
+                            <div class="tcode-name">Enter Incoming Invoice</div>
+                            <div class="tcode-desc">Posts vendor invoices matched to a PO. Part of the three-way match: PO qty = GR qty = IR qty. GR/IR auto-clears on match.</div>
+                            <span class="tcode-scenario">Used in: GR/IR Mismatch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <strong style="margin-right:10px; color:#32363a;">Procure-to-Pay Flow:</strong>
+                <span class="flow-step"><span class="flow-tcode">ME23N</span><span class="flow-label">Display PO</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">MIGO</span><span class="flow-label">Goods Receipt</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">MIRO</span><span class="flow-label">Invoice Receipt</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">MB51</span><span class="flow-label">Verify GR doc</span></span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step"><span class="flow-tcode">F110</span><span class="flow-label">Payment</span></span>
+            </div>
+        </div>
+
+    </div><!-- /roadmap-container -->
+
+    <footer style="text-align:center; padding:16px; font-size:11px; color:#89919a; border-top:1px solid #e5e5e5; background:#fff; margin-top:0;">
+        Made with IBM Bob &mdash; IBMer watsonx Challenge 2026
+    </footer>
+
+</body>
+</html>

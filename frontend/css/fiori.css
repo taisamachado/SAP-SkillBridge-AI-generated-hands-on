@@ -197,6 +197,21 @@ html, body {
     overflow: hidden;
 }
 
+/* Module-level label (replaces nav-section-label) */
+.nav-module-label {
+    padding: 10px 16px 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #89919a;
+    background: #f7f8fa;
+    border-top: 1px solid #e5e5e5;
+    margin-top: 4px;
+}
+.nav-module-label:first-child { border-top: none; margin-top: 0; }
+
+/* Keep old label class for fallback */
 .nav-section-label {
     padding: 12px 16px 4px;
     font-size: 11px;
@@ -256,6 +271,64 @@ html, body {
     border-left-color: #0070f2;
     font-weight: 600;
 }
+
+/* ── NAV SUBITEM — tcode row (level 3) ──────────────────────────────────── */
+.nav-subitem {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 12px 5px 28px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background 0.1s, border-color 0.1s;
+}
+.nav-subitem:hover {
+    background: #e8f0fb;
+    border-left-color: #b0c8f0;
+}
+.nav-subitem.active {
+    background: #e8f0fb;
+    border-left-color: #0070f2;
+}
+
+.nav-tcode {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #0070f2;
+    background: #eaf3fc;
+    padding: 1px 5px;
+    border-radius: 3px;
+    min-width: 42px;
+    text-align: center;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+}
+.nav-subitem:hover .nav-tcode,
+.nav-subitem.active .nav-tcode {
+    background: #0070f2;
+    color: #fff;
+}
+
+.nav-tdesc {
+    font-size: 12px;
+    color: #4a5568;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nav-subitem:hover .nav-tdesc,
+.nav-subitem.active .nav-tdesc {
+    color: #0070f2;
+}
+
+/* Training quick-link items */
+.nav-training-link {
+    font-weight: 600;
+    color: #354a5e !important;
+    font-size: 12px;
+}
+.nav-training-link:hover { color: #0070f2 !important; }
 
 .nav-item.scenario-nav-item {
     color: #6a6d70;
@@ -712,14 +785,54 @@ html, body {
     border-collapse: collapse;
     font-size: 13px;
     background: #fff;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #c8d6e5;
     border-radius: 4px;
     overflow: hidden;
 }
-.training-grid thead tr { background: #354a5e; color: #fff; }
-.training-grid th { padding: 7px 12px; text-align: left; font-size: 12px; font-weight: 600; }
-.training-grid td { padding: 7px 12px; border-bottom: 1px solid #f0f0f0; }
-.training-grid tbody tr:hover { background: #f5f9ff; }
+/* High-contrast header: dark text on pale blue — readable at any screen size */
+.training-grid thead tr { background: #dde8f4; color: #1b3a5c; }
+.training-grid th {
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-right: 1px solid #c8d6e5;
+}
+.training-grid th:last-child { border-right: none; }
+.training-grid td { padding: 8px 12px; border-bottom: 1px solid #eef2f7; color: #1f2d3d; }
+.training-grid tbody tr:last-child td { border-bottom: none; }
+.training-grid tbody tr:hover { background: #f0f6ff; }
+
+/* Highlight row (blocked / exception items) */
+.training-grid tbody tr.highlight-row { background: #fff8e6; }
+.training-grid tbody tr.highlight-row:hover { background: #fef3d0; }
+
+/* Bob hint pill — shown inside coaching tables */
+.bob-hint-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: #354a5e;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+    user-select: none;
+}
+.bob-hint-pill:hover { background: #0070f2; }
+.bob-hint-pill .pill-answer {
+    display: none;
+    color: #f6c76e;
+    font-weight: 700;
+}
+.bob-hint-pill.revealed .pill-answer { display: inline; }
+.bob-hint-pill.revealed .pill-label  { display: none; }
 .training-grid kbd {
     display: inline-block;
     background: #354a5e;

@@ -281,13 +281,13 @@ document.addEventListener("click", (e) => {
     }
 });
 
-// ── Left nav: transaction items ───────────────────────────────────────────
+// ── Left nav: transaction items (nav-subitem = new tree, nav-item = legacy) ──
 document.addEventListener("click", (e) => {
-    const item = e.target.closest(".nav-item[data-tcode]");
+    const item = e.target.closest(".nav-subitem[data-tcode], .nav-item[data-tcode]");
     if (item) {
         const tcode = item.dataset.tcode;
-        // Highlight active nav item
-        document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+        // Highlight active item across both old and new selectors
+        document.querySelectorAll(".nav-subitem, .nav-item").forEach(el => el.classList.remove("active"));
         item.classList.add("active");
         // Fill command field and submit
         const field = document.getElementById("commandField");

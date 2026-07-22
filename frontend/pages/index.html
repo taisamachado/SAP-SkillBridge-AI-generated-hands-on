@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAP S/4HANA – IBM Bob SkillBridge</title>
-    <link rel="stylesheet" href="../css/styles.css?v=7.0">
-    <link rel="stylesheet" href="../css/fiori.css?v=7.0">
+    <link rel="stylesheet" href="../css/styles.css?v=8.0">
+    <link rel="stylesheet" href="../css/fiori.css?v=8.0">
 </head>
 <body class="fiori-body">
 
@@ -32,9 +32,8 @@
             </div>
         </div>
         <div class="shell-right">
-            <a href="scenarios.html" class="shell-scenarios-link" title="Practice Scenarios">
-                🎯 Scenarios
-            </a>
+            <a href="scenarios.html" class="shell-scenarios-link" title="Practice Scenarios">🎯 Scenarios</a>
+            <a href="roadmap.html" class="shell-scenarios-link" title="Transaction Roadmap">🗺 Roadmap</a>
             <span class="shell-meta">Client 1000</span>
             <span class="shell-meta">S4H</span>
             <div class="shell-user-avatar" title="CONSULTANT01">C</div>
@@ -44,81 +43,174 @@
     <!-- ── MAIN LAYOUT ────────────────────────────────────────────────── -->
     <div class="fiori-layout">
 
-        <!-- ── LEFT NAV (Fiori side navigation) ──────────────────────── -->
+        <!-- ── LEFT NAV — SAP Menu Tree (3 levels: module → sub-area → tcode) ── -->
         <nav class="fiori-nav" id="fioriNav">
-            <div class="nav-section-label">Financial Accounting</div>
+
+            <!-- ── FINANCIAL ACCOUNTING ──────────────────────────────────── -->
+            <div class="nav-module-label">Financial Accounting</div>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="fi-gl">
                     <span class="nav-icon">&#9650;</span> General Ledger
                 </li>
-                <li class="nav-item" data-tcode="FS10N">G/L Account Balances</li>
-                <li class="nav-item" data-tcode="FB03">Display FI Document</li>
-                <li class="nav-item" data-tcode="FAGLL03">G/L Line Items</li>
+                <li class="nav-subitem" data-tcode="FB03">
+                    <span class="nav-tcode">FB03</span>
+                    <span class="nav-tdesc">Display Document</span>
+                </li>
+                <li class="nav-subitem" data-tcode="FS10N">
+                    <span class="nav-tcode">FS10N</span>
+                    <span class="nav-tdesc">Account Balances</span>
+                </li>
             </ul>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="fi-ap">
                     <span class="nav-icon">&#9650;</span> Accounts Payable
                 </li>
-                <li class="nav-item" data-tcode="FBL1N">Vendor Line Items</li>
-                <li class="nav-item" data-tcode="F110">Automatic Payment Run</li>
-                <li class="nav-item" data-tcode="MIRO">Enter Vendor Invoice</li>
+                <li class="nav-subitem" data-tcode="F110">
+                    <span class="nav-tcode">F110</span>
+                    <span class="nav-tdesc">Automatic Payment Program</span>
+                </li>
+                <li class="nav-subitem" data-tcode="FBL1N">
+                    <span class="nav-tcode">FBL1N</span>
+                    <span class="nav-tdesc">Display Vendor Line Items</span>
+                </li>
+                <li class="nav-subitem" data-tcode="MIRO">
+                    <span class="nav-tcode">MIRO</span>
+                    <span class="nav-tdesc">Enter Incoming Invoice</span>
+                </li>
             </ul>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="fi-ar">
                     <span class="nav-icon">&#9650;</span> Accounts Receivable
                 </li>
-                <li class="nav-item" data-tcode="FBL5N">Customer Line Items</li>
-                <li class="nav-item" data-tcode="F-28">Post Incoming Payment</li>
+                <li class="nav-subitem" data-tcode="FBL5N">
+                    <span class="nav-tcode">FBL5N</span>
+                    <span class="nav-tdesc">Display Customer Line Items</span>
+                </li>
+                <li class="nav-subitem" data-tcode="F-28">
+                    <span class="nav-tcode">F-28</span>
+                    <span class="nav-tdesc">Post Incoming Payment</span>
+                </li>
             </ul>
 
-            <div class="nav-section-label" style="margin-top:12px;">Controlling</div>
+            <!-- ── CONTROLLING ────────────────────────────────────────────── -->
+            <div class="nav-module-label">Controlling</div>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="co-cca">
                     <span class="nav-icon">&#9650;</span> Cost Center Accounting
                 </li>
-                <li class="nav-item" data-tcode="KSB1">Cost Center Actuals</li>
-                <li class="nav-item" data-tcode="KSB5">Cost Center Documents</li>
-                <li class="nav-item" data-tcode="S_ALR_87013611">Cost Centers: Plan/Actual</li>
+                <li class="nav-subitem" data-tcode="KSB1">
+                    <span class="nav-tcode">KSB1</span>
+                    <span class="nav-tdesc">Actual Line Items</span>
+                </li>
             </ul>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="co-pa">
                     <span class="nav-icon">&#9650;</span> Profitability Analysis
                 </li>
-                <li class="nav-item" data-tcode="KE30">Execute CO-PA Report</li>
-                <li class="nav-item" data-tcode="KE24">Display PA Line Items</li>
+                <li class="nav-subitem" data-tcode="KE30">
+                    <span class="nav-tcode">KE30</span>
+                    <span class="nav-tdesc">Execute CO-PA Report</span>
+                </li>
             </ul>
 
-            <div class="nav-section-label" style="margin-top:12px;">Sales &amp; Distribution</div>
+            <!-- ── SALES & DISTRIBUTION ───────────────────────────────────── -->
+            <div class="nav-module-label">Sales &amp; Distribution</div>
+
             <ul class="nav-group">
-                <li class="nav-group-header" data-group="sd">
+                <li class="nav-group-header" data-group="sd-orders">
                     <span class="nav-icon">&#9650;</span> Sales Orders
                 </li>
-                <li class="nav-item" data-tcode="VA03">Display Sales Order</li>
-                <li class="nav-item" data-tcode="VA05">List Sales Orders</li>
-                <li class="nav-item" data-tcode="VKM3">Blocked SD Documents</li>
+                <li class="nav-subitem" data-tcode="VA03">
+                    <span class="nav-tcode">VA03</span>
+                    <span class="nav-tdesc">Display Sales Order</span>
+                </li>
+                <li class="nav-subitem" data-tcode="VA05">
+                    <span class="nav-tcode">VA05</span>
+                    <span class="nav-tdesc">List Sales Orders</span>
+                </li>
             </ul>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="sd-bill">
                     <span class="nav-icon">&#9650;</span> Billing
                 </li>
-                <li class="nav-item" data-tcode="VF01">Create Billing Document</li>
-                <li class="nav-item" data-tcode="VF04">Billing Due List</li>
+                <li class="nav-subitem" data-tcode="VF01">
+                    <span class="nav-tcode">VF01</span>
+                    <span class="nav-tdesc">Create Billing Document</span>
+                </li>
+                <li class="nav-subitem" data-tcode="VF04">
+                    <span class="nav-tcode">VF04</span>
+                    <span class="nav-tdesc">Billing Due List</span>
+                </li>
+                <li class="nav-subitem" data-tcode="VKM3">
+                    <span class="nav-tcode">VKM3</span>
+                    <span class="nav-tdesc">Blocked SD Documents</span>
+                </li>
             </ul>
 
-            <!-- Separator -->
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="sd-ship">
+                    <span class="nav-icon">&#9650;</span> Shipping
+                </li>
+                <li class="nav-subitem" data-tcode="VL03N">
+                    <span class="nav-tcode">VL03N</span>
+                    <span class="nav-tdesc">Display Delivery</span>
+                </li>
+            </ul>
+
+            <!-- ── MATERIALS MANAGEMENT ───────────────────────────────────── -->
+            <div class="nav-module-label">Materials Management</div>
+
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="mm-inv">
+                    <span class="nav-icon">&#9650;</span> Inventory Management
+                </li>
+                <li class="nav-subitem" data-tcode="MMBE">
+                    <span class="nav-tcode">MMBE</span>
+                    <span class="nav-tdesc">Stock Overview</span>
+                </li>
+                <li class="nav-subitem" data-tcode="MB51">
+                    <span class="nav-tcode">MB51</span>
+                    <span class="nav-tdesc">Material Documents</span>
+                </li>
+            </ul>
+
+            <ul class="nav-group">
+                <li class="nav-group-header" data-group="mm-iv">
+                    <span class="nav-icon">&#9650;</span> Invoice Verification
+                </li>
+                <li class="nav-subitem" data-tcode="MIRO">
+                    <span class="nav-tcode">MIRO</span>
+                    <span class="nav-tdesc">Enter Incoming Invoice</span>
+                </li>
+            </ul>
+
+            <!-- ── TRAINING ────────────────────────────────────────────────── -->
             <div class="nav-separator"></div>
-            <div class="nav-section-label">Training</div>
+            <div class="nav-module-label">Training</div>
+
             <ul class="nav-group">
                 <li class="nav-group-header" data-group="training">
                     <span class="nav-icon">&#9650;</span> Practice Scenarios
                 </li>
-                <li class="nav-item" style="font-weight:700;" onclick="window.location.href='scenarios.html'">&#127919; Open Interactive Scenarios</li>
-                <li class="nav-item scenario-nav-item" data-scenario="payment_run_exception">&#127381; Payment Run Blocked (FI-AP)</li>
-                <li class="nav-item scenario-nav-item" data-scenario="cost_center_overrun">&#127381; IT Cost Center Overrun (CO)</li>
-                <li class="nav-item scenario-nav-item" data-scenario="copa_margin_analysis">&#127381; CO-PA Board Report (CO-PA)</li>
-                <li class="nav-item scenario-nav-item" data-scenario="billing_credit_block">&#127381; Billing Credit Block (SD-FI)</li>
-                <li class="nav-item scenario-nav-item" data-scenario="grir_mismatch_period_end">&#127381; GR/IR Mismatch (MM-FI)</li>
+                <li class="nav-item nav-training-link" onclick="window.location.href='scenarios.html'">
+                    &#127919; Interactive Scenarios
+                </li>
+                <li class="nav-item nav-training-link" onclick="window.location.href='roadmap.html'">
+                    &#128506; Transaction Roadmap
+                </li>
+                <li class="nav-item scenario-nav-item" data-scenario="payment_run_exception">&#9655; Payment Run Blocked</li>
+                <li class="nav-item scenario-nav-item" data-scenario="cost_center_overrun">&#9655; IT Cost Center Overrun</li>
+                <li class="nav-item scenario-nav-item" data-scenario="copa_margin_analysis">&#9655; CO-PA Board Report</li>
+                <li class="nav-item scenario-nav-item" data-scenario="billing_credit_block">&#9655; Billing Credit Block</li>
+                <li class="nav-item scenario-nav-item" data-scenario="grir_mismatch_period_end">&#9655; GR/IR Mismatch</li>
             </ul>
+
         </nav>
 
         <!-- ── CONTENT AREA ──────────────────────────────────────────── -->
@@ -186,6 +278,6 @@
         </div>
     </footer>
 
-    <script type="module" src="../js/app/main.js?v=7.0"></script>
+    <script type="module" src="../js/app/main.js?v=8.0"></script>
 </body>
 </html>
