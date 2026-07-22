@@ -248,7 +248,8 @@ html, body {
     transition: transform 0.2s;
 }
 .nav-group.collapsed .nav-icon { transform: rotate(-90deg); }
-.nav-group.collapsed .nav-item { display: none; }
+.nav-group.collapsed .nav-item,
+.nav-group.collapsed .nav-subitem { display: none; }
 
 .nav-item {
     padding: 7px 16px 7px 32px;
